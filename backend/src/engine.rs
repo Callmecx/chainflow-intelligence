@@ -93,7 +93,9 @@ pub fn evaluate(
     let mut state = previous
         .map(|p| p.state.clone())
         .unwrap_or_else(|| "DISCOVERED".into());
-    let mut label = "NEW".to_string();
+    let mut label = previous
+        .map(|p| p.label.clone())
+        .unwrap_or_else(|| "NEW".into());
     let mut why = Vec::new();
     let mut evidence = Vec::new();
     let mut incomplete = vec!["HONEYPOT / TOP10 / SMART_MONEY = UNKNOWN；未独立验证".into()];
@@ -230,7 +232,7 @@ pub fn evaluate(
     } else if state == "INVALIDATED" {
         label = "RISK".into();
         why.push("先前风险已使本轮观察失效，不自动重新确认".into());
-    } else if fresh && previous.is_some() {
+    } else if fresh && t.price_usd.is_some_and(|price| price > 0.0) && previous.is_some() {
         if eligible {
             let delta = recent
                 .first()
@@ -276,7 +278,7 @@ pub fn evaluate(
             why.push("保留行情观察；未满足完整候选阈值，不升级确认".into());
         }
     } else {
-        why.push("记录首个样本，等待后续真实采样".into());
+        why.push("等待后续有效真实采样；没有可用价格时不升级状态".into());
     }
     if state != old_state {
         emitted.push(signal(&t,&format!("STATE_{state}"),if state=="CONFIRMED" {"CONFIRMATION"} else {"WATCH"},&state,"规则观察状态变化，不构成投资建议",vec![format!("{old_state} -> {state}; observation_age={age}s; eligible={eligible}; sufficient_samples={sufficient}")]));
@@ -345,6 +347,23 @@ mod tests {
             market_cap_usd: Some(10000.0),
             ..Default::default()
         }
+    }
+    #[test]
+    fn missing_price_does_not_upgrade_discovery() {
+        let start = Utc::now();
+        let (prior, _) = evaluate(
+            token(start, 1.0, 10000.0),
+            None,
+            vec![],
+            &Rules::default(),
+            start,
+        );
+        let later = start + chrono::Duration::seconds(120);
+        let mut t = token(later, 1.0, 10000.0);
+        t.price_usd = None;
+        let (view, events) = evaluate(t, Some(&prior), vec![], &Rules::default(), later);
+        assert_eq!(view.state, "DISCOVERED");
+        assert!(!events.iter().any(|s| s.rule.starts_with("STATE_")));
     }
     #[test]
     fn confirmation_requires_six_minutes_and_a_second_observation() {
