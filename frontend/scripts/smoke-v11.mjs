@@ -10,7 +10,7 @@ await mkdir(output,{recursive:true})
 const started=new Date().toISOString()
 const browser=await chromium.launch(process.env.PLAYWRIGHT_CHANNEL?{channel:process.env.PLAYWRIGHT_CHANNEL}:{})
 const errors=[],results=[],screenshots=[]
-const capture=async(page,name)=>{await page.screenshot({path:path.join(output,name)});screenshots.push(name)}
+const capture=async(target,name,options={})=>{await target.screenshot({path:path.join(output,name),...options});screenshots.push(name)}
 try{
   const context=await browser.newContext({...devices['Desktop Chrome'],acceptDownloads:true})
   const page=await context.newPage()
@@ -26,9 +26,9 @@ try{
   if(!local && ['telegram','watchlist','runtime','notification_counts'].some(key=>Object.hasOwn(payload,key)||Object.hasOwn(payload.metrics??{},key)))throw new Error('Public snapshot exposes local/private status fields')
   if(!payload.research||!Array.isArray(payload.research.records)||!Array.isArray(payload.research.rule_stats))throw new Error('V1.1 research report unavailable')
   await capture(page,'v11-real-desktop-home.png')
-  await page.getByRole('button',{name:'信号研究',exact:true}).click()
+  await page.getByRole('button',{name:/信号研究/}).click()
   await page.getByRole('heading',{name:'真实信号效果与规则对照'}).waitFor()
-  await capture(page,'v11-real-desktop-research.png')
+  await capture(page.locator('.research-panel'),'v11-real-desktop-research.png')
   const downloadPromise=page.waitForEvent('download')
   await page.getByRole('button',{name:'导出 JSON',exact:true}).click()
   const download=await downloadPromise
@@ -44,6 +44,8 @@ try{
   if(event){
     const evidence=page.getByRole('group',{name:`信号证据 ${event.id}`,exact:true})
     await evidence.locator('summary').first().click()
+    const frozen=evidence.locator('.raw-evidence summary')
+    if(await frozen.count())await frozen.click()
     await evidence.screenshot({path:path.join(output,'v11-real-signal-evidence.png')})
     screenshots.push('v11-real-signal-evidence.png')
     results.push({surface:'signal_evidence',signal_id:event.id,rule:event.rule,rule_version:event.rule_version||'V1_LEGACY_UNKNOWN',category:event.category||'V1_LEGACY',at:event.at,expanded:true})
@@ -57,7 +59,7 @@ try{
     if('token' in health.telegram || 'chat_id' in health.telegram || 'bot_token' in health.telegram)throw new Error('Health contains forbidden Telegram fields')
     results.push({surface:'local_health',status:health.status,database:health.database?.integrity_check,telegram_configured:health.telegram.configured,telegram_enabled:health.telegram.enabled,telegram_verification:health.telegram.verification,credential_fields_present:false})
   }else await page.getByRole('heading',{name:'公开站的健康信息边界'}).waitFor()
-  await capture(page,'v11-real-desktop-health.png')
+  await capture(page.locator(local?'.local-health':'.public-privacy'),'v11-real-desktop-health.png')
   const mobile=await browser.newContext({...devices['Pixel 7']})
   const mobilePage=await mobile.newPage()
   mobilePage.on('pageerror',error=>errors.push(error.message))
@@ -66,7 +68,8 @@ try{
     await mobilePage.getByRole('heading',{name:section==='research'?'真实信号效果与规则对照':'实际来源探测结果'}).waitFor()
     const layout=await mobilePage.evaluate(()=>({clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth}))
     if(layout.scrollWidth>layout.clientWidth)throw new Error(`Mobile ${section} overflow`)
-    await capture(mobilePage,`v11-real-mobile-${section}.png`)
+    await mobilePage.evaluate(()=>window.scrollTo(0,0))
+    await capture(mobilePage,`v11-real-mobile-${section}.png`,{fullPage:true})
     results.push({surface:`mobile_${section}`,layout})
   }
   if(errors.length)throw new Error(`Runtime errors: ${errors.join('; ')}`)
