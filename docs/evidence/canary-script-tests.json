@@ -1,0 +1,7 @@
+{
+  "kind": "OFFLINE_CANARY_HELPER_TEST",
+  "actual_canary_run": false,
+  "empty_initializing_snapshot": true,
+  "counter_delta": true,
+  "reset_and_restart_unknown": true
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "OFFLINE_WORKFLOW_FAILURE_TEST",
+  "cases": [
+    {
+      "case": "success",
+      "passed": true
+    },
+    {
+      "case": "failed_with_valid_snapshot",
+      "passed": true
+    },
+    {
+      "case": "missing",
+      "passed": true
+    },
+    {
+      "case": "invalid_json",
+      "passed": true
+    },
+    {
+      "case": "empty",
+      "passed": true
+    }
+  ]
+}

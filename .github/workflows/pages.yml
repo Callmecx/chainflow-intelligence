@@ -1,0 +1,111 @@
+name: Public snapshot and Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '17,47 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build read-only collector
+        run: cargo build --locked --release --manifest-path backend/Cargo.toml
+      - name: Collect current public data
+        id: scan
+        continue-on-error: true
+        timeout-minutes: 5
+        run: backend/target/release/chainflow scan-once --output frontend/public/snapshot.json --db /tmp/chainflow-snapshot.sqlite
+      - name: Validate snapshot or publish explicit source failure
+        env:
+          SCAN_OUTCOME: ${{ steps.scan.outcome }}
+        run: |
+          python3 - <<'PY'
+          import datetime, json, os, pathlib
+          path = pathlib.Path('frontend/public/snapshot.json')
+          error = None
+          try:
+              data = json.loads(path.read_text(encoding='utf-8'))
+              assert data['mode'] == 'PUBLIC_SNAPSHOT', 'wrong snapshot mode'
+              assert isinstance(data['items'], list), 'missing items'
+              assert isinstance(data['sources'], list), 'missing sources'
+              assert isinstance(data['provider_errors'], list), 'missing provider errors'
+              assert data['generated_at_utc'], 'missing collection timestamp'
+              assert data['max_staleness_seconds'] > 0, 'invalid staleness threshold'
+              if os.environ['SCAN_OUTCOME'] != 'success':
+                  error = 'scan-once failed or timed out; see Actions log'
+                  data['items'] = []
+                  data['signals'] = []
+                  data['provider_errors'].append('SOURCE_ERROR: 数据更新失败 / 无最新数据。' + error)
+                  path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+              if not data['items'] and not data['provider_errors']:
+                  data['provider_errors'] = ['UNAVAILABLE: 本次真实扫描没有可用代币数据。']
+                  path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+          except Exception as exc:
+              error = str(exc)
+              now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+              data = {
+                  'mode': 'PUBLIC_SNAPSHOT', 'generated_at_utc': now,
+                  'max_staleness_seconds': 2700, 'items': [], 'signals': [], 'metrics': {},
+                  'sources': [{'id': 'snapshot_job', 'status': 'SOURCE_ERROR',
+                               'checked_at': now, 'last_success_at': None, 'latency_ms': None,
+                               'requests': 0, 'errors': 1, 'detail': '数据更新失败 / 无最新数据'}],
+                  'provider_errors': ['SOURCE_ERROR: 数据更新失败 / 无最新数据。' + error]
+              }
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('## Public snapshot\n')
+              summary.write(f"Generated UTC: {data['generated_at_utc']}\n\n")
+              summary.write(f"Items: {len(data['items'])}; provider errors: {len(data['provider_errors'])}\n")
+              if error:
+                  summary.write('SOURCE_ERROR: a failure snapshot will be deployed.\n')
+          PY
+      - name: Build static dashboard
+        working-directory: frontend
+        env:
+          VITE_MODE: PUBLIC_SNAPSHOT
+        run: |
+          npm ci
+          npm run typecheck
+          npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: frontend/dist
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy static snapshot
+        id: deployment
+        uses: actions/deploy-pages@v4
