@@ -9,6 +9,8 @@ async function request<T>(url: string, init: RequestInit = {}): Promise<T> {
 export async function loadSnapshot(): Promise<Snapshot> {
   const snapshot = await request<Snapshot>(localMode ? '/api/tokens' : `${import.meta.env.BASE_URL}snapshot.json`)
   if (!snapshot || !Array.isArray(snapshot.items) || !Array.isArray(snapshot.sources) || !Array.isArray(snapshot.signals) || !Array.isArray(snapshot.provider_errors) || !Number.isFinite(Date.parse(snapshot.generated_at_utc)) || !Number.isFinite(snapshot.max_staleness_seconds)) throw new Error('快照结构无效，无法验证数据时间和来源')
+  const expectedMode = localMode ? 'LOCAL_LIVE' : 'PUBLIC_SNAPSHOT'
+  if (snapshot.mode !== expectedMode) throw new Error(`快照模式不匹配：当前需要 ${expectedMode}，收到 ${String(snapshot.mode)}；DEMO_FIXTURE 不能作为真实数据`)
   return snapshot
 }
 export const lookup = (chain: string, address: string) => request<TokenView[]>(`/api/tokens/${encodeURIComponent(chain)}/${encodeURIComponent(address)}`)

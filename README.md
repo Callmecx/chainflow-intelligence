@@ -4,6 +4,10 @@
 
 **PUBLIC_SNAPSHOT = 半小时目标快照；LOCAL_LIVE = 本机服务持续轮询。** 数据失联、缺失字段、陈旧样本分别显示 `SOURCE_ERROR`、`UNKNOWN`、`STALE`。本项目不连接钱包、不接收私钥、不下单，也不承诺收益或全网新币覆盖。
 
+已发布：[公开研究看板](https://callmecx.github.io/chainflow-intelligence/) · [GitHub 源码](https://github.com/Callmecx/chainflow-intelligence) · [Actions](https://github.com/Callmecx/chainflow-intelligence/actions)。2026-10-13 已验证 Pages HTTP 200、真实双链数据、桌面/手机详情及完整地址复制；完成 15 分钟本机 Canary。25 项 Rust 测试、20 项前端单测、18 项浏览器场景及最终模式校验的 6 项定向回归通过，版本范围和原始证据见 [验收记录](docs/ACCEPTANCE.md)。本轮费用为 0。
+
+直接打开公开网页即可查看当次快照；需要持续跟踪个人观察名单和积累历史时，按下面步骤运行本机服务。
+
 ## Windows 启动
 
 需要免费工具：[Rust stable](https://rustup.rs/)、[Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)、[Node.js LTS](https://nodejs.org/en/download)、[Git](https://git-scm.com/downloads/win)。仅发布仓库时需要 [GitHub CLI](https://cli.github.com/)。安装 C++ 工具时选“使用 C++ 的桌面开发”及 Windows SDK。
@@ -72,7 +76,7 @@ npx.cmd playwright install chromium
 npm.cmd run test:e2e
 ```
 
-Fixture 测试只验证代码行为，不能证明外部 API 可用；真实连接、Canary、CI 与站点证据见 [验收记录](docs/ACCEPTANCE.md)。公开地址是否已经部署以该记录和 GitHub 实际状态为准，不能从预期 URL 推断成功。
+Fixture 测试只验证代码行为，不能证明外部 API 可用。本次已分别完成真实 API 扫描、15 分钟 Canary、远端 CI 和实际 Pages 浏览器验证；固定测试版本、运行统计与仍未覆盖的长期场景见 [验收记录](docs/ACCEPTANCE.md)。
 
 Pages 工作流在 `main` 推送、手动执行和每小时 UTC 第 17 / 47 分扫描。标准公开仓库 runner 运行短时任务，使用官方 Pages 构件部署；不会把快照写成 Git 提交。GitHub 调度可能延迟或跳过，前端展示实际 UTC 抓取时间与陈旧状态。Pages 不运行 Rust 后台。[发布操作与免费限制](docs/DEPLOYMENT.md)
 

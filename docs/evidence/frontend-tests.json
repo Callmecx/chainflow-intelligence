@@ -1,13 +1,13 @@
 {
   "kind": "FRONTEND_TEST_EVIDENCE",
-  "recorded_at_utc": "2026-10-13T08:23:12.4774667Z",
+  "recorded_at_utc": "2026-10-13T08:40:22.6099026Z",
   "fixture_tests": {
     "unit": {
       "command": "npm test",
       "framework": "Vitest 3.2.7",
-      "passed": 12,
+      "passed": 20,
       "failed": 0,
-      "at_utc": "2026-10-13T08:16:26Z"
+      "at_utc": "2026-10-13T08:39:41Z"
     },
     "browser": {
       "command": "PLAYWRIGHT_CHANNEL=chrome npm run test:e2e",
@@ -16,7 +16,6 @@
       "failed": 0,
       "duration_seconds": 19.1,
       "coverage": "9 scenarios each on Desktop Chrome and Pixel 7 emulation; only explicitly labelled TEST_FIXTURE data",
-      "report": "frontend/playwright-report/index.html",
       "isolated_port": 5187,
       "reuse_existing_server": false
     }
@@ -26,7 +25,7 @@
     "typecheck": "PASS",
     "vite_build": "PASS",
     "vite_version": "7.3.7",
-    "build_seconds": 1.74
+    "build_seconds": 0.507
   },
   "real_online_browser": {
     "fixture": false,
@@ -44,6 +43,25 @@
   },
   "resolved_failures": [
     "Initial E2E run reused unrelated existing port 5173; corrected to isolated 5187 and disabled reuse without stopping old project",
-    "Mobile screen-reader-only table header caused viewport overflow; anchored scroll wrapper and verified clientWidth-based layout assertion"
-  ]
+    "Mobile screen-reader-only table header caused viewport overflow; anchored scroll wrapper and verified clientWidth-based layout assertion",
+    "Snapshot loader now rejects DEMO_FIXTURE and any mode mismatching the configured local/public mode"
+  ],
+  "snapshot_mode_boundary_regression": {
+    "change": "Strict snapshot mode matching; reject DEMO_FIXTURE, invalid/missing mode and cross-mode payloads",
+    "production_file": "frontend/src/api.ts",
+    "new_unit_tests": 8,
+    "unit_passed": 20,
+    "unit_failed": 0,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "targeted_e2e": {
+      "command": "PLAYWRIGHT_CHANNEL=chrome npm run test:e2e -- --grep \"snapshot mode|stale snapshot|missing data\"",
+      "passed": 6,
+      "failed": 0,
+      "duration_seconds": 5.5,
+      "coverage": "Desktop and mobile: legitimate public mode, stale snapshot, unavailable source",
+      "report": "frontend/playwright-report/index.html"
+    },
+    "at_utc": "2026-10-13T08:39:41Z"
+  }
 }

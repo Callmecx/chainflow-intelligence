@@ -1,0 +1,18 @@
+{
+  "kind": "READ_ONLY_CANARY_DATABASE_AUDIT",
+  "interval_start_utc": "2026-10-13T08:19:27.961Z",
+  "interval_end_utc": "2026-10-13T08:34:28.835Z",
+  "signals_by_severity": [
+    {
+      "severity": "RISK",
+      "count": 60
+    },
+    {
+      "severity": "WATCH",
+      "count": 359
+    }
+  ],
+  "integrity_check": "ok",
+  "counted_by": "signal sample timestamp (at), not database commit time",
+  "note": "Includes in-flight scan samples fetched before Canary end but committed after end. These counts have a different denominator from the 407 signal counter delta observed by Canary. Do not sum or substitute them."
+}

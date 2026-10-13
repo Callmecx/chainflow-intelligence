@@ -1,0 +1,145 @@
+{
+  "checked_at_utc": "2026-10-13T08:30:16.1305063Z",
+  "url": "https://callmecx.github.io/chainflow-intelligence/",
+  "http": 200,
+  "mode": "PUBLIC_SNAPSHOT",
+  "generated_at_utc": "2026-10-13T08:29:07.673Z",
+  "items": 65,
+  "chains": {
+    "bsc": 25,
+    "solana": 40
+  },
+  "provider_errors": [],
+  "sources": [
+    {
+      "id": "bsc_contract_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:40.444Z",
+      "last_success_at": "2026-10-13T08:28:40.444Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "eth_chainId=0x38; eth_blockNumber=0x797864e; eth_call WBNB decimals=18; latest (not finality proof)"
+    },
+    {
+      "id": "bsc_event_logs",
+      "status": "UNSUPPORTED",
+      "checked_at": "2026-10-13T08:28:40.444Z",
+      "last_success_at": null,
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "Official public BSC endpoints document eth_getLogs disabled; continuous full-chain swaps are unsupported"
+    },
+    {
+      "id": "bsc_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:40.444Z",
+      "last_success_at": "2026-10-13T08:28:40.444Z",
+      "latency_ms": 3116,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_boosts",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:44.647Z",
+      "last_success_at": "2026-10-13T08:28:44.647Z",
+      "latency_ms": 7392,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_market_bsc",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:46.714Z",
+      "last_success_at": "2026-10-13T08:28:46.714Z",
+      "latency_ms": 1916,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_market_solana",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:44.798Z",
+      "last_success_at": "2026-10-13T08:28:44.798Z",
+      "latency_ms": 150,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_profiles",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:37.254Z",
+      "last_success_at": "2026-10-13T08:28:37.254Z",
+      "latency_ms": 136,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_bsc_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:57.149Z",
+      "last_success_at": "2026-10-13T08:28:57.149Z",
+      "latency_ms": 9945,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_bsc_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:29:07.669Z",
+      "last_success_at": "2026-10-13T08:29:07.669Z",
+      "latency_ms": 10519,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_solana_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:37.385Z",
+      "last_success_at": "2026-10-13T08:28:37.385Z",
+      "latency_ms": 267,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_solana_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:47.203Z",
+      "last_success_at": "2026-10-13T08:28:47.203Z",
+      "latency_ms": 9817,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "solana_mint_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:37.327Z",
+      "last_success_at": "2026-10-13T08:28:37.327Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "getAccountInfo mint=So11111111111111111111111111111111111111112; slot=456376247; commitment=confirmed; no transaction signature because this is an account read"
+    },
+    {
+      "id": "solana_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T08:28:37.327Z",
+      "last_success_at": "2026-10-13T08:28:37.327Z",
+      "latency_ms": 209,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-13T08:36:20.8304333Z",
+  "stop_checks": {
+    "stopped_at_utc": "2026-10-13T08:35:02.9610995Z",
+    "api_port_closed": true,
+    "frontend_port_closed": true,
+    "other_project_5173_preserved": true
+  },
+  "old_started_at": "2026-10-13T08:18:21.502Z",
+  "new_started_at": "2026-10-13T08:35:12.707Z",
+  "before_samples": 1261,
+  "after_samples": 1444,
+  "database_integrity": "ok",
+  "journal_mode": "wal",
+  "health_status": "OK",
+  "new_runtime": true,
+  "data_preserved": true
+}
