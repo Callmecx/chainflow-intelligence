@@ -1,0 +1,28 @@
+{
+  "diagnosed_date_utc": "2026-10-13",
+  "reqwest_version": "0.12.28",
+  "hyper_util_version": "0.1.21",
+  "initial_features": ["json", "rustls-tls"],
+  "final_features": ["json", "rustls-tls", "system-proxy"],
+  "offline_mock_proxy_policy": "no_proxy only in cfg(test) HTTP fixture client",
+  "provider_tests_after_fix": {"passed": 13, "failed": 0},
+  "default_features": false,
+  "findings": [
+    "reqwest default features include system-proxy; default-features=false disables it",
+    "reqwest system-proxy enables hyper-util/client-proxy-system",
+    "hyper-util Matcher::from_system always starts with environment variables",
+    "Windows registry ProxyEnable/ProxyServer/ProxyOverride is read only when client-proxy-system is enabled",
+    "Windows static registry implementation does not execute PAC/WPAD scripts",
+    "HTTP_PROXY/HTTPS_PROXY/ALL_PROXY and NO_PROXY provide a current-process workaround without rebuilding"
+  ],
+  "minimum_persistent_fix": "Add system-proxy to existing reqwest feature list; retain rustls-tls and certificate validation",
+  "source_files": [
+    "reqwest-0.12.28/Cargo.toml",
+    "reqwest-0.12.28/src/proxy.rs",
+    "hyper-util-0.1.21/src/client/proxy/matcher.rs",
+    "hyper-util-0.1.21/Cargo.toml"
+  ],
+  "official_reference": "https://docs.rs/reqwest/0.12.28/reqwest/",
+  "credentials_recorded": false,
+  "rust_revalidation": "Recorded separately by the root task; this diagnosis alone does not establish successful Rust connectivity"
+}

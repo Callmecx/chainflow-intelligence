@@ -1,0 +1,39 @@
+    Blocking waiting for file lock on package cache
+   Compiling chainflow v0.1.0 (D:\ChainFlow-Intelligence\backend)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.96s
+     Running unittests src\lib.rs (backend\target\debug\deps\chainflow-98cfcecccd5849ec.exe)
+
+running 24 tests
+test models::tests::address_validation_rejects_wrong_chain_and_short_mint ... ok
+test providers::http::tests::retry_after_seconds_dates_and_invalid ... ok
+test providers::parsing::tests::cross_source_case_normalization_and_out_of_order_samples ... ok
+test engine::tests::missing_market_cap_and_insufficient_samples_never_confirm ... ok
+test engine::tests::outcomes_require_completed_contiguous_window ... ok
+test engine::tests::stale_cannot_upgrade_and_ttl_expires ... ok
+test providers::parsing::tests::absent_market_cap_stays_unknown_and_tiny_liquidity_stays_finite ... ok
+test providers::http::tests::shared_limiter_carries_state_across_requests_and_buckets ... ok
+test engine::tests::confirmation_requires_six_minutes_and_a_second_observation ... ok
+test engine::tests::risk_is_immediate_and_zero_liquidity_safe ... ok
+test providers::parsing::tests::reject_wrong_chain_and_nonfinite_values ... ok
+test providers::tests::fixture_replay_is_deterministic_and_explicit ... ok
+test providers::parsing::tests::recorded_public_responses_replay_without_network ... ok
+test providers::tests::invalid_lookup_never_makes_a_network_request ... ok
+test providers::http::tests::cache_retains_timestamp_and_request_count ... ok
+test providers::http::tests::long_retry_after_is_honoured_without_blocking_scan ... ok
+test providers::http::tests::forbidden_is_not_retried ... ok
+test storage::tests::source_failure_signals_are_cooldown_deduplicated ... ok
+test api::tests::health_validation_and_write_origin ... ok
+test storage::tests::dedup_restart_out_of_order_and_cooldown ... ok
+test storage::tests::archive_restore_idempotent_and_unknown_not_zero ... ok
+test storage::tests::watchlist_full_duplicate_remains_idempotent ... ok
+test providers::http::tests::service_unavailable_retries_and_recovers ... ok
+test providers::http::tests::timeout_is_counted_without_inventing_a_response ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.14s
+
+     Running unittests src\main.rs (backend\target\debug\deps\chainflow-2d90d51368509c20.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,386 @@
+[
+  {
+    "status": 200,
+    "item_count": 30,
+    "url": "https://api.dexscreener.com/token-profiles/latest/v1",
+    "fetched_at": "2026-10-13T08:06:19.5736363Z",
+    "first_item": {
+      "url": "https://dexscreener.com/solana/6haciziunuuvbvunja6sfb7bsxnpow3bz4r2cmprpump",
+      "chainId": "solana",
+      "tokenAddress": "6haciZiuNuUvBvUnJa6SFB7bsxnpoW3Bz4R2cmpRpump",
+      "icon": "https://cdn.dexscreener.com/cms/images/ya2N5Q_j1AiRr03z?width=64&height=64&fit=crop&quality=95&format=auto",
+      "header": "https://cdn.dexscreener.com/cms/images/CXh1K02SHBsDED3i?width=600&height=200&fit=crop&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/6haciZiuNuUvBvUnJa6SFB7bsxnpoW3Bz4R2cmpRpump?timestamp=1791878700000",
+      "description": "VoucherGuard is an open-source toolkit for understanding Solana transactions and verifying signed payment vouchers. \n\nTransaction X-Ray turns a Solscan link into an interactive view of recorded transfers and selected permission-related actions. \n\nEligible $VG holders unlock Pro tools for custom transaction rules, saved reviews, comparisons and report exports. \n\nRead-only by design. No custody. No payment execution. \n\nVerify what your AI agents sign.",
+      "links": [
+        {
+          "label": "Website",
+          "url": "https://voucherguard.pages.dev/"
+        },
+        {
+          "type": "twitter",
+          "url": "https://x.com/VoucherGuard"
+        }
+      ],
+      "cto": false
+    }
+  },
+  {
+    "status": 200,
+    "item_count": 30,
+    "url": "https://api.dexscreener.com/token-boosts/latest/v1",
+    "fetched_at": "2026-10-13T08:06:29.4451315Z",
+    "first_item": {
+      "url": "https://dexscreener.com/solana/9pc1xe4jzkzdga9cswskucl7pawmeppuvtxcm11kpump",
+      "chainId": "solana",
+      "tokenAddress": "9PC1XE4jzKZdga9CsWSKuCL7pawMeppuVTxCM11kpump",
+      "description": "HATE PEOPLE is an anti-social internet legend embracing dark humor, online chaos, and unapologetic degen culture in the crypto universe.",
+      "icon": "kZW-UqKA1nYh7c12",
+      "header": "https://cdn.dexscreener.com/cms/images/6TZuhLFuRy4_Goh2?width=900&height=300&fit=crop&quality=95&format=auto",
+      "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/9PC1XE4jzKZdga9CsWSKuCL7pawMeppuVTxCM11kpump?timestamp=1791878700000",
+      "links": [
+        {
+          "url": "https://hatepeople.site/"
+        },
+        {
+          "type": "twitter",
+          "url": "https://x.com/hatepeople_sol"
+        },
+        {
+          "type": "telegram",
+          "url": "https://t.me/HatePeopleSol"
+        }
+      ],
+      "totalAmount": 10,
+      "amount": 10
+    }
+  },
+  {
+    "status": 200,
+    "item_count": 30,
+    "url": "https://api.dexscreener.com/latest/dex/search?q=So11111111111111111111111111111111111111112",
+    "fetched_at": "2026-10-13T08:06:36.8404708Z",
+    "first_item": {
+      "chainId": "solana",
+      "dexId": "orca",
+      "url": "https://dexscreener.com/solana/czfq3xzzdmsdgduyrnltrhgc47cxcztlg4crryfu44ze",
+      "pairAddress": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+      "labels": [
+        "wp"
+      ],
+      "baseToken": {
+        "address": "So11111111111111111111111111111111111111112",
+        "name": "Wrapped SOL",
+        "symbol": "SOL"
+      },
+      "quoteToken": {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "name": "USD Coin",
+        "symbol": "USDC"
+      },
+      "priceNative": "108.5130",
+      "priceUsd": "108.51",
+      "txns": {
+        "m5": {
+          "buys": 153,
+          "sells": 85
+        },
+        "h1": {
+          "buys": 2044,
+          "sells": 1657
+        },
+        "h6": {
+          "buys": 11953,
+          "sells": 12714
+        },
+        "h24": {
+          "buys": 50639,
+          "sells": 48538
+        }
+      },
+      "volume": {
+        "h24": 125722411.35,
+        "h6": 25573762.49,
+        "h1": 4381662.89,
+        "m5": 282830.07
+      },
+      "priceChange": {
+        "m5": 0.13,
+        "h1": 0.45,
+        "h6": 2.9,
+        "h24": -3.35
+      },
+      "liquidity": {
+        "usd": 27975324.3,
+        "base": 180750,
+        "quote": 8361495
+      },
+      "pairCreatedAt": 1688106058000,
+      "info": {
+        "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
+        "header": "https://cdn.dexscreener.com/cms/images/7a8b9d77ffff37a36144cdebff51443a7c35bd737e8f327fc03f1121357731dd?width=1500&height=500&quality=95&format=auto",
+        "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/So11111111111111111111111111111111111111112?timestamp=1791878700000",
+        "websites": [
+          {
+            "url": "https://solana.com",
+            "label": "Website"
+          }
+        ],
+        "socials": [
+          {
+            "url": "https://x.com/solana",
+            "type": "twitter"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "item_count": 1,
+    "url": "https://api.dexscreener.com/latest/dex/pairs/solana/Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "fetched_at": "2026-10-13T08:06:39.2785955Z",
+    "first_item": {
+      "chainId": "solana",
+      "dexId": "orca",
+      "url": "https://dexscreener.com/solana/czfq3xzzdmsdgduyrnltrhgc47cxcztlg4crryfu44ze",
+      "pairAddress": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+      "labels": [
+        "wp"
+      ],
+      "baseToken": {
+        "address": "So11111111111111111111111111111111111111112",
+        "name": "Wrapped SOL",
+        "symbol": "SOL"
+      },
+      "quoteToken": {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "name": "USD Coin",
+        "symbol": "USDC"
+      },
+      "priceNative": "108.3700",
+      "priceUsd": "108.37",
+      "txns": {
+        "m5": {
+          "buys": 154,
+          "sells": 144
+        },
+        "h1": {
+          "buys": 2045,
+          "sells": 1716
+        },
+        "h6": {
+          "buys": 11954,
+          "sells": 12773
+        },
+        "h24": {
+          "buys": 50640,
+          "sells": 48597
+        }
+      },
+      "volume": {
+        "h24": 125776696.12,
+        "h6": 25628047.26,
+        "h1": 4435947.65,
+        "m5": 337114.84
+      },
+      "priceChange": {
+        "m5": -0.01,
+        "h1": 0.32,
+        "h6": 2.76,
+        "h24": -3.48
+      },
+      "liquidity": {
+        "usd": 27949445.13,
+        "base": 181251,
+        "quote": 8307232
+      },
+      "pairCreatedAt": 1688106058000,
+      "info": {
+        "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
+        "header": "https://cdn.dexscreener.com/cms/images/7a8b9d77ffff37a36144cdebff51443a7c35bd737e8f327fc03f1121357731dd?width=1500&height=500&quality=95&format=auto",
+        "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/So11111111111111111111111111111111111111112?timestamp=1791878700000",
+        "websites": [
+          {
+            "url": "https://solana.com",
+            "label": "Website"
+          }
+        ],
+        "socials": [
+          {
+            "url": "https://x.com/solana",
+            "type": "twitter"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "item_count": 5,
+    "url": "https://api.geckoterminal.com/api/v2/networks/solana/pools/Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE/ohlcv/minute?aggregate=5&limit=5&currency=usd&token=base",
+    "fetched_at": "2026-10-13T08:06:42.2574842Z",
+    "first_item": [
+      1791878700,
+      108.62602666180855,
+      108.6329118165805,
+      108.350991661204,
+      108.6329118165805,
+      148096.80496332585
+    ]
+  },
+  {
+    "status": 200,
+    "item_count": 300,
+    "url": "https://api.geckoterminal.com/api/v2/networks/solana/pools/Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE/trades",
+    "fetched_at": "2026-10-13T08:06:53.199267Z",
+    "first_item": null
+  },
+  {
+    "first_item": {
+      "chainId": "solana",
+      "dexId": "orca",
+      "url": "https://dexscreener.com/solana/czfq3xzzdmsdgduyrnltrhgc47cxcztlg4crryfu44ze",
+      "pairAddress": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+      "labels": [
+        "wp"
+      ],
+      "baseToken": {
+        "address": "So11111111111111111111111111111111111111112",
+        "name": "Wrapped SOL",
+        "symbol": "SOL"
+      },
+      "quoteToken": {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "name": "USD Coin",
+        "symbol": "USDC"
+      },
+      "priceNative": "108.5526",
+      "priceUsd": "108.55",
+      "txns": {
+        "m5": {
+          "buys": 286,
+          "sells": 135
+        },
+        "h1": {
+          "buys": 2091,
+          "sells": 1743
+        },
+        "h6": {
+          "buys": 12094,
+          "sells": 12729
+        },
+        "h24": {
+          "buys": 50740,
+          "sells": 48575
+        }
+      },
+      "volume": {
+        "h24": 125859580.06,
+        "h6": 25649328.04,
+        "h1": 4454143.92,
+        "m5": 364746.86
+      },
+      "priceChange": {
+        "m5": 0.18,
+        "h1": 0.35,
+        "h6": 3.02,
+        "h24": -3.33
+      },
+      "liquidity": {
+        "usd": 27982639.33,
+        "base": 180384,
+        "quote": 8401449
+      },
+      "pairCreatedAt": 1688106058000,
+      "info": {
+        "imageUrl": "https://cdn.dexscreener.com/cms/images/fcfb87378d3198fe753ca08ba51a5552a84f34cf48cd09d83971aa195bdf00d2?width=800&height=800&quality=95&format=auto",
+        "header": "https://cdn.dexscreener.com/cms/images/7a8b9d77ffff37a36144cdebff51443a7c35bd737e8f327fc03f1121357731dd?width=1500&height=500&quality=95&format=auto",
+        "openGraph": "https://cdn.dexscreener.com/token-images/og/solana/So11111111111111111111111111111111111111112?timestamp=1791879000000",
+        "websites": [
+          {
+            "url": "https://solana.com",
+            "label": "Website"
+          }
+        ],
+        "socials": [
+          {
+            "url": "https://x.com/solana",
+            "type": "twitter"
+          }
+        ]
+      }
+    },
+    "item_count": 1,
+    "fetched_at": "2026-10-13T08:10:20.0732942Z",
+    "probe_note": "NoEnumerate preserves one-item JSON arrays",
+    "status": 200,
+    "url": "https://api.dexscreener.com/tokens/v1/solana/So11111111111111111111111111111111111111112"
+  },
+  {
+    "first_item": {
+      "chainId": "bsc",
+      "dexId": "pancakeswap",
+      "url": "https://dexscreener.com/bsc/0x172fcd41e0913e95784454622d1c3724f546f849",
+      "pairAddress": "0x172fcD41E0913e95784454622d1c3724f546f849",
+      "labels": [
+        "v3"
+      ],
+      "baseToken": {
+        "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "name": "Wrapped BNB",
+        "symbol": "WBNB"
+      },
+      "quoteToken": {
+        "address": "0x55d398326f99059fF775485246999027B3197955",
+        "name": "Tether USD",
+        "symbol": "USDT"
+      },
+      "priceNative": "746.6588",
+      "priceUsd": "746.65",
+      "txns": {
+        "m5": {
+          "buys": 712,
+          "sells": 396
+        },
+        "h1": {
+          "buys": 5963,
+          "sells": 3631
+        },
+        "h6": {
+          "buys": 29144,
+          "sells": 19656
+        },
+        "h24": {
+          "buys": 147588,
+          "sells": 87953
+        }
+      },
+      "volume": {
+        "h24": 115606202.5,
+        "h6": 23768501.9,
+        "h1": 4516363.84,
+        "m5": 628426.82
+      },
+      "priceChange": {
+        "m5": 0.07,
+        "h1": 0.21,
+        "h6": 1.26,
+        "h24": -0.94
+      },
+      "liquidity": {
+        "usd": 15490035.79,
+        "base": 7858.8287,
+        "quote": 9622171
+      },
+      "fdv": 1157710772,
+      "marketCap": 1157710772,
+      "pairCreatedAt": 1680703943000
+    },
+    "item_count": 1,
+    "fetched_at": "2026-10-13T08:10:22.6823992Z",
+    "probe_note": "NoEnumerate preserves one-item JSON arrays",
+    "status": 200,
+    "url": "https://api.dexscreener.com/tokens/v1/bsc/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+  }
+]

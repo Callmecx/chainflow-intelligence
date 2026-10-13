@@ -1,0 +1,138 @@
+[
+  {
+    "fetched_at": "2026-10-13T07:55:43.3886436Z",
+    "url": "https://api.dexscreener.com/token-pairs/v1/solana/So11111111111111111111111111111111111111112",
+    "status": 200,
+    "item_count": 30,
+    "examples": [
+      {
+        "pool_address": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+        "fdv_usd": null,
+        "source_url": "https://dexscreener.com/solana/czfq3xzzdmsdgduyrnltrhgc47cxcztlg4crryfu44ze",
+        "chain": "solana",
+        "market_cap_usd": null,
+        "token_address": "So11111111111111111111111111111111111111112"
+      },
+      {
+        "pool_address": "58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2",
+        "fdv_usd": null,
+        "source_url": "https://dexscreener.com/solana/58oqchx4ywmvkdwllzzbi4chocc2fqcuwbkwmihlyqo2",
+        "chain": "solana",
+        "market_cap_usd": null,
+        "token_address": "So11111111111111111111111111111111111111112"
+      }
+    ]
+  },
+  {
+    "fetched_at": "2026-10-13T07:55:44.5469848Z",
+    "url": "https://api.dexscreener.com/token-pairs/v1/bsc/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    "status": 200,
+    "item_count": 30,
+    "examples": [
+      {
+        "pool_address": "0x172fcD41E0913e95784454622d1c3724f546f849",
+        "fdv_usd": 1157488689,
+        "source_url": "https://dexscreener.com/bsc/0x172fcd41e0913e95784454622d1c3724f546f849",
+        "chain": "bsc",
+        "market_cap_usd": 1157488689,
+        "token_address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+      },
+      {
+        "pool_address": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
+        "fdv_usd": 1155432315,
+        "source_url": "https://dexscreener.com/bsc/0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "chain": "bsc",
+        "market_cap_usd": 1155432315,
+        "token_address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+      }
+    ]
+  },
+  {
+    "fetched_at": "2026-10-13T07:55:44.9200362Z",
+    "url": "https://api.geckoterminal.com/api/v2/networks/solana/new_pools?include=base_token,quote_token,dex",
+    "status": 200,
+    "item_count": 20,
+    "examples": [
+      {
+        "fdv_usd": "3147.772942",
+        "market_cap_usd": null,
+        "pool_address": "35FbS7b8FAucw5qUPvspbV1bWTnWPM8x7ad86S52UBB7",
+        "entity_id": "solana_35FbS7b8FAucw5qUPvspbV1bWTnWPM8x7ad86S52UBB7",
+        "token_id": "solana_9t1i1aZ7nMPJ2zav6haP8BDeqAnLdqYXFEsBbTzZpump"
+      },
+      {
+        "fdv_usd": "1884.3125986",
+        "market_cap_usd": null,
+        "pool_address": "AgKf1sMpXGyFwzmFbaXa6R6TB4JcUtyfhkc91BU6gHkc",
+        "entity_id": "solana_AgKf1sMpXGyFwzmFbaXa6R6TB4JcUtyfhkc91BU6gHkc",
+        "token_id": "solana_ERDiDmqoLVvkeC6u3F34ZGaX4fxDs1tFtHXrm1U4pump"
+      }
+    ]
+  },
+  {
+    "fetched_at": "2026-10-13T07:56:35.748037Z",
+    "url": "https://api.geckoterminal.com/api/v2/networks/bsc/new_pools?include=base_token,quote_token,dex",
+    "status": 200,
+    "item_count": 20,
+    "examples": [
+      {
+        "fdv_usd": "3218.123921",
+        "market_cap_usd": null,
+        "pool_address": "0x2b3aa3b34425e96a4c3dda4f914489d3500effff",
+        "entity_id": "bsc_0x2b3aa3b34425e96a4c3dda4f914489d3500effff",
+        "token_id": "bsc_0x2b3aa3b34425e96a4c3dda4f914489d3500effff"
+      },
+      {
+        "fdv_usd": "3218.12393",
+        "market_cap_usd": null,
+        "pool_address": "0x58267c821bdbe60a57f12894ebca4d3a3a4dffff",
+        "entity_id": "bsc_0x58267c821bdbe60a57f12894ebca4d3a3a4dffff",
+        "token_id": "bsc_0x58267c821bdbe60a57f12894ebca4d3a3a4dffff"
+      }
+    ]
+  },
+  {
+    "fetched_at": "2026-10-13T07:56:46.4426798Z",
+    "url": "https://api.geckoterminal.com/api/v2/networks/solana/trending_pools?include=base_token,quote_token,dex",
+    "status": 200,
+    "item_count": 20,
+    "examples": [
+      {
+        "fdv_usd": "954503.4754",
+        "market_cap_usd": null,
+        "pool_address": "12jc1DzJpzbCDaKuM4brAKh9jcFry2TLG1FfGsL4ftCG",
+        "entity_id": "solana_12jc1DzJpzbCDaKuM4brAKh9jcFry2TLG1FfGsL4ftCG",
+        "token_id": "solana_HMYd9tosnUXuNHmq7pXmoePRVBLBBjA3JBfydq6upump"
+      },
+      {
+        "fdv_usd": "3423.5985967709",
+        "market_cap_usd": null,
+        "pool_address": "BoW9h5GBqdNR55fKE3VHdzNgPLANzmYKY1eiqmx1DRLZ",
+        "entity_id": "solana_BoW9h5GBqdNR55fKE3VHdzNgPLANzmYKY1eiqmx1DRLZ",
+        "token_id": "solana_A8JUiZLzjGAsKxE74evdspHcuW4hvhPbvryDhaDZpump"
+      }
+    ]
+  },
+  {
+    "fetched_at": "2026-10-13T07:56:56.9142308Z",
+    "url": "https://api.geckoterminal.com/api/v2/networks/bsc/trending_pools?include=base_token,quote_token,dex",
+    "status": 200,
+    "item_count": 20,
+    "examples": [
+      {
+        "fdv_usd": "195528331.735278",
+        "market_cap_usd": "0.0",
+        "pool_address": "0xcaaf3c41a40103a23eeaa4bba468af3cf5b0e0d8",
+        "entity_id": "bsc_0xcaaf3c41a40103a23eeaa4bba468af3cf5b0e0d8",
+        "token_id": "bsc_0xcae117ca6bc8a341d2e7207f30e180f0e5618b9d"
+      },
+      {
+        "fdv_usd": "48956785.347438",
+        "market_cap_usd": "11540859.4454292",
+        "pool_address": "0x25042161f871a34e77a7af1aff74aa1a0dc9b4c661fd53c7504948ad97f8d13f",
+        "entity_id": "bsc_0x25042161f871a34e77a7af1aff74aa1a0dc9b4c661fd53c7504948ad97f8d13f",
+        "token_id": "bsc_0x277add739c6e0477616948357af9e79fe1ec9b80"
+      }
+    ]
+  }
+]

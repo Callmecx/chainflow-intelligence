@@ -1,0 +1,98 @@
+[
+  {
+    "status": 200,
+    "fetched_at": "2026-10-13T07:57:07.7094088Z",
+    "body": {
+      "jsonrpc": "2.0",
+      "result": {
+        "context": {
+          "apiVersion": "4.3.0",
+          "slot": 456367578
+        },
+        "value": {
+          "data": {
+            "parsed": {
+              "info": {
+                "decimals": 9,
+                "freezeAuthority": null,
+                "isInitialized": true,
+                "mintAuthority": null,
+                "supply": "0"
+              },
+              "type": "mint"
+            },
+            "program": "spl-token",
+            "space": 82
+          },
+          "executable": false,
+          "lamports": 1852116092148,
+          "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "rentEpoch": 18446744073709551615,
+          "space": 82
+        }
+      },
+      "id": 1
+    },
+    "request": {
+      "jsonrpc": "2.0",
+      "params": [
+        "So11111111111111111111111111111111111111112",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "confirmed"
+        }
+      ],
+      "id": 1,
+      "method": "getAccountInfo"
+    },
+    "url": "https://api.mainnet.solana.com"
+  },
+  {
+    "status": 200,
+    "fetched_at": "2026-10-13T07:57:08.5213977Z",
+    "body": [
+      {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "0x38"
+      },
+      {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": "0x79775e7"
+      },
+      {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": "0x0000000000000000000000000000000000000000000000000000000000000012"
+      }
+    ],
+    "request": [
+      {
+        "jsonrpc": "2.0",
+        "params": [],
+        "id": 1,
+        "method": "eth_chainId"
+      },
+      {
+        "jsonrpc": "2.0",
+        "params": [],
+        "id": 2,
+        "method": "eth_blockNumber"
+      },
+      {
+        "jsonrpc": "2.0",
+        "params": [
+          {
+            "data": "0x313ce567",
+            "to": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+          },
+          "latest"
+        ],
+        "id": 3,
+        "method": "eth_call"
+      }
+    ],
+    "url": "https://bsc-dataseed.bnbchain.org"
+  }
+]

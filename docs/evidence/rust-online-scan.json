@@ -1,0 +1,218 @@
+{
+  "initial_scan": {
+    "reason": "Rust system-proxy feature was disabled; DEX, Gecko and Solana RPC timed out. BSC RPC succeeded. A failure snapshot was written and CLI exited 1.",
+    "samples": 0,
+    "status": "FAILED",
+    "generated_at_utc": "2026-10-13T08:15:30.572Z"
+  },
+  "retested_scan": {
+    "sources": [
+      {
+        "id": "bsc_contract_verification",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:53.312Z",
+        "last_success_at": "2026-10-13T08:16:53.312Z",
+        "latency_ms": null,
+        "requests": 0,
+        "errors": 0,
+        "detail": "eth_chainId=0x38; eth_blockNumber=0x797802d; eth_call WBNB decimals=18; latest (not finality proof)"
+      },
+      {
+        "id": "bsc_event_logs",
+        "status": "UNSUPPORTED",
+        "checked_at": "2026-10-13T08:16:53.312Z",
+        "last_success_at": null,
+        "latency_ms": null,
+        "requests": 0,
+        "errors": 0,
+        "detail": "Official public BSC endpoints document eth_getLogs disabled; continuous full-chain swaps are unsupported"
+      },
+      {
+        "id": "bsc_rpc",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:53.312Z",
+        "last_success_at": "2026-10-13T08:16:53.312Z",
+        "latency_ms": 2947,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "dexscreener_boosts",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:57.399Z",
+        "last_success_at": "2026-10-13T08:16:57.399Z",
+        "latency_ms": 7131,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "dexscreener_market_bsc",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:59.739Z",
+        "last_success_at": "2026-10-13T08:16:59.739Z",
+        "latency_ms": 1986,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "dexscreener_market_solana",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:57.751Z",
+        "last_success_at": "2026-10-13T08:16:57.751Z",
+        "latency_ms": 350,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "dexscreener_profiles",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:50.266Z",
+        "last_success_at": "2026-10-13T08:16:50.266Z",
+        "latency_ms": 507,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "geckoterminal_bsc_new_pools",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:17:10.006Z",
+        "last_success_at": "2026-10-13T08:17:10.006Z",
+        "latency_ms": 10050,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "geckoterminal_bsc_trending_pools",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:17:20.309Z",
+        "last_success_at": "2026-10-13T08:17:20.309Z",
+        "latency_ms": 10301,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "geckoterminal_solana_new_pools",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:50.278Z",
+        "last_success_at": "2026-10-13T08:16:50.278Z",
+        "latency_ms": 519,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "geckoterminal_solana_trending_pools",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:59.953Z",
+        "last_success_at": "2026-10-13T08:16:59.953Z",
+        "latency_ms": 9673,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      },
+      {
+        "id": "solana_mint_verification",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:50.364Z",
+        "last_success_at": "2026-10-13T08:16:50.364Z",
+        "latency_ms": null,
+        "requests": 0,
+        "errors": 0,
+        "detail": "getAccountInfo mint=So11111111111111111111111111111111111111112; slot=456372985; commitment=confirmed; no transaction signature because this is an account read"
+      },
+      {
+        "id": "solana_rpc",
+        "status": "OK",
+        "checked_at": "2026-10-13T08:16:50.364Z",
+        "last_success_at": "2026-10-13T08:16:50.364Z",
+        "latency_ms": 604,
+        "requests": 1,
+        "errors": 0,
+        "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+      }
+    ],
+    "mode": "PUBLIC_SNAPSHOT",
+    "examples": [
+      {
+        "chain": "solana",
+        "token_address": "2EcFpC35XeCMa6GvNupSkw8r2HoSmvpFNbDabbVJpump",
+        "pool_address": "2dpyTQVi6SoMeM9DGfzu23bq5sosj1kMWfSGzMKDNX7w",
+        "price_usd": 3.1814793055272057E-06,
+        "market_cap_usd": null,
+        "fdv_usd": 3181.479306,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/new_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:16:50.278Z"
+      },
+      {
+        "chain": "solana",
+        "token_address": "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",
+        "pool_address": "ByKfqBGyHQj1hmEUouXfueLJEU1SHdJz3uMtd1yXGunS",
+        "price_usd": 0.007904645846297336,
+        "market_cap_usd": 496889168.830733,
+        "fdv_usd": 606466487.17309,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/trending_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:16:59.954Z"
+      },
+      {
+        "chain": "solana",
+        "token_address": "33jENUQnjoitkMFpvNJcSHyLAHFWJuHwT6E3E8CNpump",
+        "pool_address": "6iep3EgqksbZwgzMBCyAJtiVtVYkCgL9BnPBEwLR8AGQ",
+        "price_usd": 0.0008180672253860585,
+        "market_cap_usd": null,
+        "fdv_usd": 800113.639785841,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/trending_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:16:59.954Z"
+      },
+      {
+        "chain": "bsc",
+        "token_address": "0x0250675d8ec6438c8d8c72659c07e4c6e5159037",
+        "pool_address": "0x3dc69cae5e1d46160ee3972e76c89d3f60d1b1ae",
+        "price_usd": 0.000246607222012574,
+        "market_cap_usd": null,
+        "fdv_usd": 172030.1474,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/bsc/new_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:17:10.006Z"
+      },
+      {
+        "chain": "bsc",
+        "token_address": "0x0f2f40b8696171e73a479c89276e3cafa3ef4444",
+        "pool_address": "0x0f2f40b8696171e73a479c89276e3cafa3ef4444",
+        "price_usd": 2.41792385346676E-05,
+        "market_cap_usd": null,
+        "fdv_usd": 24179.23853,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/bsc/new_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:17:10.006Z"
+      },
+      {
+        "chain": "bsc",
+        "token_address": "0x1d28d989f9e3ccb8b15d0cec601734514f958e4d",
+        "pool_address": "0xe85bc115847d7106b6335d067c6d2cf9b837ce50626a1df3f01d0012681a5db4",
+        "price_usd": 0.0531158655477084,
+        "market_cap_usd": 12455810.9944,
+        "fdv_usd": 4552380.68665762,
+        "source": "geckoterminal",
+        "source_url": "https://api.geckoterminal.com/api/v2/networks/bsc/trending_pools?include=base_token,quote_token,dex",
+        "fetched_at": "2026-10-13T08:17:20.309Z"
+      }
+    ],
+    "provider_errors": [],
+    "status": "SUCCESS",
+    "generated_at_utc": "2026-10-13T08:17:20.388Z",
+    "pools": 66,
+    "solana": 40,
+    "bsc": 26
+  },
+  "resolution": "Enabled reqwest system-proxy while keeping rustls certificate validation; Windows default proxy now supported. Local serve confirmed with no explicit proxy env."
+}

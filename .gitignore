@@ -13,6 +13,7 @@ data/*.sqlite*
 data/archives/
 data/backups/
 data/archive.json
+data/provider-probes/
 data/snapshot.json
 frontend/public/snapshot.json
 logs/

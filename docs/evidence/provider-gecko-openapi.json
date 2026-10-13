@@ -1,0 +1,29 @@
+{
+  "info": {
+    "title": "GeckoTerminal API V2",
+    "version": "v2-beta",
+    "description": "GeckoTerminal Public API endpoints.\n\n## Beta Release\nThe API is in its Beta release, and is subject to frequent changes.\nHowever, we aim to provide minimal disruption, and setting the request version would help avoid unexpected issues.\n\n**Please subscribe via [this form](https://forms.gle/jSMu4jLQBXeiVD1U9) to be notified of important API updates.**\n\n## Base URL\nAll endpoints below use the base URL: `https://api.geckoterminal.com/api/v2`\n\n## Versioning\nIt is recommended to set the API version via the `Accept` header.\nThe current version is **20230203**.\n\nFor example, to specify the current version, set header `Accept: application/json;version=20230203`.\n\n_If no version is specified, the latest version will be used._\n\n## Data Freshness\nAll endpoints listed below are cached for **1 minute**\n\nAll data is updated **as fast as 2-3 seconds** after a transaction is confirmed on the blockchain, subject to the network's availability.\n\n## Rate Limit\nThis Public API is limited to approximately 10 calls/minute, which may fluctuate based on network traffic.\nFor higher and more stable rate limits please subscribe to any CoinGecko API paid plan to access higher rate limit for GeckoTerminal endpoints (known as /onchain endpoints) or learn more at [CoinGecko](https://www.coingecko.com/en/api/pricing). \n\nTo share with us your feedback about the public API, let us know [here](https://forms.gle/jSMu4jLQBXeiVD1U9)!\n"
+  },
+  "paths": [
+    "/networks/{network}/pools/{pool_address}/ohlcv/{timeframe}",
+    "/networks/{network}/dexes",
+    "/networks",
+    "/networks/trending_pools",
+    "/networks/{network}/trending_pools",
+    "/networks/{network}/pools/{address}",
+    "/networks/{network}/pools/multi/{addresses}",
+    "/networks/{network}/pools",
+    "/networks/{network}/dexes/{dex}/pools",
+    "/networks/{network}/tokens/{token_address}/pools",
+    "/networks/{network}/new_pools",
+    "/networks/new_pools",
+    "/search/pools",
+    "/networks/{network}/pools/{pool_address}/trades",
+    "/networks/{network}/tokens/{address}",
+    "/networks/{network}/tokens/multi/{addresses}",
+    "/networks/{network}/tokens/{address}/info",
+    "/networks/{network}/pools/{pool_address}/info",
+    "/tokens/info_recently_updated",
+    "/simple/networks/{network}/token_price/{addresses}"
+  ]
+}

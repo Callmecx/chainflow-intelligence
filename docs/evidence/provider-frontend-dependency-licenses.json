@@ -1,0 +1,818 @@
+[
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "7.29.7",
+    "package_path": "node_modules/@babel/helper-string-parser"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "7.29.7",
+    "package_path": "node_modules/@babel/helper-validator-identifier"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "7.29.9",
+    "package_path": "node_modules/@babel/parser"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "7.29.8",
+    "package_path": "node_modules/@babel/types"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/aix-ppc64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/android-arm"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/android-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/android-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/darwin-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/darwin-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/freebsd-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/freebsd-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-arm"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-ia32"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-loong64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-mips64el"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-ppc64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-riscv64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-s390x"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/linux-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/netbsd-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/netbsd-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/openbsd-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/openbsd-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/openharmony-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/sunos-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/win32-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/win32-ia32"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/@esbuild/win32-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "1.6.0",
+    "package_path": "node_modules/@jridgewell/sourcemap-codec"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.5.1",
+    "package_path": "node_modules/@napi-rs/lzma-linux-x64-gnu"
+  },
+  {
+    "license": "Apache-2.0",
+    "dev": true,
+    "version": "1.64.0",
+    "package_path": "node_modules/@playwright/test"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.0.1",
+    "package_path": "node_modules/@rolldown/pluginutils"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-android-arm-eabi"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-android-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-darwin-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-darwin-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-freebsd-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-freebsd-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-arm-gnueabihf"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-arm-musleabihf"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-arm64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-arm64-musl"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-loong64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-loong64-musl"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-ppc64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-ppc64-musl"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-riscv64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-riscv64-musl"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-s390x-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-x64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-linux-x64-musl"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-openbsd-x64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-openharmony-arm64"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-win32-arm64-msvc"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-win32-ia32-msvc"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-win32-x64-gnu"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/@rollup/rollup-win32-x64-msvc"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "5.2.3",
+    "package_path": "node_modules/@types/chai"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.0.2",
+    "package_path": "node_modules/@types/deep-eql"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.0.9",
+    "package_path": "node_modules/@types/estree"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "24.19.2",
+    "package_path": "node_modules/@types/node"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "6.0.10",
+    "package_path": "node_modules/@vitejs/plugin-vue"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/expect"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/mocker"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/pretty-format"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/runner"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/snapshot"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/spy"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/@vitest/utils"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.4.28",
+    "package_path": "node_modules/@volar/language-core"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.4.28",
+    "package_path": "node_modules/@volar/source-map"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.4.28",
+    "package_path": "node_modules/@volar/typescript"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/compiler-core"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "2.0.2",
+    "package_path": "node_modules/@vue/compiler-core/node_modules/estree-walker"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/compiler-dom"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/compiler-sfc"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "2.0.2",
+    "package_path": "node_modules/@vue/compiler-sfc/node_modules/estree-walker"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/compiler-ssr"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.3.13",
+    "package_path": "node_modules/@vue/language-core"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/reactivity"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/runtime-core"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/runtime-dom"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/server-renderer"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/@vue/shared"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.1",
+    "package_path": "node_modules/alien-signals"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.0.1",
+    "package_path": "node_modules/assertion-error"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "6.7.14",
+    "package_path": "node_modules/cac"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "5.3.3",
+    "package_path": "node_modules/chai"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.1.3",
+    "package_path": "node_modules/check-error"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.2.3",
+    "package_path": "node_modules/csstype"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.4.3",
+    "package_path": "node_modules/debug"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "5.0.2",
+    "package_path": "node_modules/deep-eql"
+  },
+  {
+    "license": "BSD-2-Clause",
+    "dev": null,
+    "version": "7.0.1",
+    "package_path": "node_modules/entities"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.7.0",
+    "package_path": "node_modules/es-module-lexer"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.28.2",
+    "package_path": "node_modules/esbuild"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.0.3",
+    "package_path": "node_modules/estree-walker"
+  },
+  {
+    "license": "Apache-2.0",
+    "dev": true,
+    "version": "1.4.0",
+    "package_path": "node_modules/expect-type"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "6.5.0",
+    "package_path": "node_modules/fdir"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.3.3",
+    "package_path": "node_modules/fsevents"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "9.0.1",
+    "package_path": "node_modules/js-tokens"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.1",
+    "package_path": "node_modules/loupe"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "0.30.21",
+    "package_path": "node_modules/magic-string"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.1.3",
+    "package_path": "node_modules/ms"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.4.1",
+    "package_path": "node_modules/muggle-string"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.3.20",
+    "package_path": "node_modules/nanoid"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.0.1",
+    "package_path": "node_modules/path-browserify"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.0.3",
+    "package_path": "node_modules/pathe"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.0.1",
+    "package_path": "node_modules/pathval"
+  },
+  {
+    "license": "ISC",
+    "dev": null,
+    "version": "1.1.1",
+    "package_path": "node_modules/picocolors"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.0.7",
+    "package_path": "node_modules/picomatch"
+  },
+  {
+    "license": "Apache-2.0",
+    "dev": true,
+    "version": "1.64.0",
+    "package_path": "node_modules/playwright"
+  },
+  {
+    "license": "Apache-2.0",
+    "dev": true,
+    "version": "1.64.0",
+    "package_path": "node_modules/playwright-core"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "8.5.30",
+    "package_path": "node_modules/postcss"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.64.5",
+    "package_path": "node_modules/rollup"
+  },
+  {
+    "license": "ISC",
+    "dev": true,
+    "version": "2.0.0",
+    "package_path": "node_modules/siginfo"
+  },
+  {
+    "license": "BSD-3-Clause",
+    "dev": null,
+    "version": "1.2.2",
+    "package_path": "node_modules/source-map-js"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.0.2",
+    "package_path": "node_modules/stackback"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.10.0",
+    "package_path": "node_modules/std-env"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.1.0",
+    "package_path": "node_modules/strip-literal"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.9.0",
+    "package_path": "node_modules/tinybench"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.3.2",
+    "package_path": "node_modules/tinyexec"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "0.2.17",
+    "package_path": "node_modules/tinyglobby"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "1.1.1",
+    "package_path": "node_modules/tinypool"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.0.0",
+    "package_path": "node_modules/tinyrainbow"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "4.0.6",
+    "package_path": "node_modules/tinyspy"
+  },
+  {
+    "license": "Apache-2.0",
+    "dev": null,
+    "version": "5.9.3",
+    "package_path": "node_modules/typescript"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "7.24.6",
+    "package_path": "node_modules/undici-types"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "7.3.7",
+    "package_path": "node_modules/vite"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.4",
+    "package_path": "node_modules/vite-node"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.7",
+    "package_path": "node_modules/vitest"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.2.0",
+    "package_path": "node_modules/vscode-uri"
+  },
+  {
+    "license": "MIT",
+    "dev": null,
+    "version": "3.5.44",
+    "package_path": "node_modules/vue"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "3.3.13",
+    "package_path": "node_modules/vue-tsc"
+  },
+  {
+    "license": "MIT",
+    "dev": true,
+    "version": "2.3.0",
+    "package_path": "node_modules/why-is-node-running"
+  }
+]

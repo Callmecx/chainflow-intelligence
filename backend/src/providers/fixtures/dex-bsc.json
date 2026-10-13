@@ -1,0 +1,119 @@
+[
+  {
+    "chainId": "bsc",
+    "dexId": "pancakeswap",
+    "url": "https://dexscreener.com/bsc/0x172fcd41e0913e95784454622d1c3724f546f849",
+    "pairAddress": "0x172fcD41E0913e95784454622d1c3724f546f849",
+    "labels": [
+      "v3"
+    ],
+    "baseToken": {
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Wrapped BNB",
+      "symbol": "WBNB"
+    },
+    "quoteToken": {
+      "address": "0x55d398326f99059fF775485246999027B3197955",
+      "name": "Tether USD",
+      "symbol": "USDT"
+    },
+    "priceNative": "746.5156",
+    "priceUsd": "746.51",
+    "txns": {
+      "m5": {
+        "buys": 351,
+        "sells": 290
+      },
+      "h1": {
+        "buys": 4986,
+        "sells": 3134
+      },
+      "h6": {
+        "buys": 28003,
+        "sells": 19072
+      },
+      "h24": {
+        "buys": 148572,
+        "sells": 88195
+      }
+    },
+    "volume": {
+      "h24": 115321246.14,
+      "h6": 23076361.85,
+      "h1": 3601764.87,
+      "m5": 143891.54
+    },
+    "priceChange": {
+      "m5": 0.01,
+      "h1": 0.07,
+      "h6": 1.38,
+      "h24": -1.1
+    },
+    "liquidity": {
+      "usd": 15488753.53,
+      "base": 7887.2452,
+      "quote": 9600801
+    },
+    "fdv": 1157488689,
+    "marketCap": 1157488689,
+    "pairCreatedAt": 1680703943000
+  },
+  {
+    "chainId": "bsc",
+    "dexId": "pancakeswap",
+    "url": "https://dexscreener.com/bsc/0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+    "pairAddress": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
+    "labels": [
+      "v2"
+    ],
+    "baseToken": {
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Wrapped BNB",
+      "symbol": "WBNB"
+    },
+    "quoteToken": {
+      "address": "0x55d398326f99059fF775485246999027B3197955",
+      "name": "Tether USD",
+      "symbol": "USDT"
+    },
+    "priceNative": "745.5783",
+    "priceUsd": "745.57",
+    "txns": {
+      "m5": {
+        "buys": 287,
+        "sells": 258
+      },
+      "h1": {
+        "buys": 2338,
+        "sells": 2074
+      },
+      "h6": {
+        "buys": 12251,
+        "sells": 11411
+      },
+      "h24": {
+        "buys": 46284,
+        "sells": 44472
+      }
+    },
+    "volume": {
+      "h24": 6678843.79,
+      "h6": 1403595.34,
+      "h1": 212484.07,
+      "m5": 32606.13
+    },
+    "priceChange": {
+      "m5": 0.02,
+      "h1": 0.11,
+      "h6": 1.48,
+      "h24": -1.37
+    },
+    "liquidity": {
+      "usd": 58188133.56,
+      "base": 39022,
+      "quote": 29094066
+    },
+    "fdv": 1155432315,
+    "marketCap": 1155432315
+  }
+]
