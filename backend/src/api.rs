@@ -25,6 +25,8 @@ pub struct AppState {
     pub scan_errors: AtomicU64,
     pub api_requests: AtomicU64,
     pub last_scan_ms: AtomicU64,
+    pub telegram_configured: bool,
+    pub telegram_enabled: bool,
 }
 impl AppState {
     pub fn new(store: Store, hub: ProviderHub, rules: Rules) -> Self {
@@ -39,6 +41,8 @@ impl AppState {
             scan_errors: AtomicU64::new(0),
             api_requests: AtomicU64::new(0),
             last_scan_ms: AtomicU64::new(0),
+            telegram_configured: false,
+            telegram_enabled: false,
         }
     }
     pub async fn scan(&self) -> anyhow::Result<usize> {
@@ -47,11 +51,43 @@ impl AppState {
         let mut watchlist = self.store.watchlist().await?;
         let existing = self.store.snapshot("LOCAL_LIVE").await?;
         let mut views = existing.items;
-        views.sort_by(|a, b| a.token.fetched_at.cmp(&b.token.fetched_at));
+        let pending: Vec<String> = existing.research["records"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter(|r| {
+                ["1h", "2h", "6h"]
+                    .iter()
+                    .any(|w| r["windows"][w]["status"] == "PENDING")
+            })
+            .filter_map(|r| {
+                Some(format!(
+                    "{}:{}",
+                    r["chain"].as_str()?,
+                    r["token_address"].as_str()?
+                ))
+            })
+            .collect();
+        views.sort_by_key(|v| {
+            (
+                if pending.contains(&format!("{}:{}", v.token.chain, v.token.token_address)) {
+                    0
+                } else if v.state == "CONFIRMED" || v.state == "CONFIRMATION_CANDIDATE" {
+                    1
+                } else if v.state == "WATCH" {
+                    2
+                } else {
+                    3
+                },
+                v.token.fetched_at.clone(),
+            )
+        });
         // Continue observing candidates even after they disappear from discovery feeds.
         for v in views {
             let k = (v.token.chain, v.token.token_address);
-            if watchlist.len() < 120 && !watchlist.contains(&k) {
+            if watchlist.iter().filter(|(chain, _)| chain == &k.0).count() < 80
+                && !watchlist.contains(&k)
+            {
                 watchlist.push(k)
             }
         }
@@ -136,6 +172,7 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/api/sources", get(sources))
         .route("/api/signals", get(signals))
         .route("/api/metrics", get(metrics))
+        .route("/api/research", get(signal_research))
         .route("/api/watchlist", get(watchlist).post(watch))
         .route("/api/watchlist/{chain}/{address}", delete(unwatch))
         .layer(DefaultBodyLimit::max(4096))
@@ -145,8 +182,13 @@ pub fn router(state: Arc<AppState>) -> Router {
 async fn health(State(s): State<Arc<AppState>>) -> ApiResult<Value> {
     s.api_requests.fetch_add(1, Ordering::Relaxed);
     let snapshot = s.snapshot("LOCAL_LIVE").await.map_err(error)?;
+    let telegram = s
+        .store
+        .notification_status(s.telegram_configured, s.telegram_enabled)
+        .await
+        .map_err(error)?;
     Ok(Json(
-        json!({"status":if snapshot.items.is_empty(){"INITIALIZING_OR_UNAVAILABLE"}else if !snapshot.provider_errors.is_empty() || snapshot.sources.iter().any(|v|v.status=="SOURCE_ERROR" || v.status=="UNAVAILABLE" || v.last_success_at.as_deref().and_then(timestamp).is_some_and(|at|(chrono::Utc::now()-at).num_seconds()>300)){"DEGRADED"}else{"OK"},"mode":"LOCAL_LIVE","read_only_chain":true,"started_at":s.started_at,"last_scan_at":snapshot.generated_at_utc,"database":s.store.doctor().await.map_err(error)?,"runtime":s.runtime()}),
+        json!({"status":if snapshot.items.is_empty(){"INITIALIZING_OR_UNAVAILABLE"}else if !snapshot.provider_errors.is_empty() || snapshot.sources.iter().any(|v|v.status=="SOURCE_ERROR" || v.status=="UNAVAILABLE" || v.last_success_at.as_deref().and_then(timestamp).is_some_and(|at|(chrono::Utc::now()-at).num_seconds()>300)){"DEGRADED"}else{"OK"},"mode":"LOCAL_LIVE","read_only_chain":true,"started_at":s.started_at,"last_scan_at":snapshot.generated_at_utc,"database":s.store.doctor().await.map_err(error)?,"runtime":s.runtime(),"notification_counts":telegram["queue"],"telegram":telegram,"signal_counts":snapshot.metrics["signal_counts"],"source_health":snapshot.metrics["source_health"]}),
     ))
 }
 async fn tokens(State(s): State<Arc<AppState>>) -> ApiResult<Snapshot> {
@@ -164,6 +206,15 @@ async fn signals(State(s): State<Arc<AppState>>) -> ApiResult<Vec<Signal>> {
 async fn metrics(State(s): State<Arc<AppState>>) -> ApiResult<Value> {
     s.api_requests.fetch_add(1, Ordering::Relaxed);
     Ok(Json(s.snapshot("LOCAL_LIVE").await.map_err(error)?.metrics))
+}
+async fn signal_research(State(s): State<Arc<AppState>>) -> ApiResult<Value> {
+    s.api_requests.fetch_add(1, Ordering::Relaxed);
+    Ok(Json(
+        s.store
+            .research(s.rules.research_min_samples)
+            .await
+            .map_err(error)?,
+    ))
 }
 async fn token(
     State(s): State<Arc<AppState>>,
@@ -318,6 +369,7 @@ mod tests {
             ("/api/health", 200),
             ("/api/tokens/wrong/not-an-address", 400),
             ("/api/tokens", 200),
+            ("/api/research", 200),
         ] {
             let response = app
                 .clone()

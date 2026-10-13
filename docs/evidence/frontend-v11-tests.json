@@ -1,0 +1,121 @@
+{
+  "kind": "V1_1_FRONTEND_ACCEPTANCE",
+  "recorded_at_utc": "2026-10-13T09:59:21.7657889Z",
+  "package_version": "1.1.0",
+  "status": "AUTOMATED_CHECKS_AND_REAL_LOCAL_SMOKE_PASS_PUBLIC_V1_1_SMOKE_PENDING",
+  "typecheck": "PASS",
+  "lint": {
+    "command": "npm run lint",
+    "status": "PASS",
+    "config": "ESLint flat config; JS recommended, TypeScript recommended, Vue essential",
+    "official_references": [
+      "https://eslint.org/docs/latest/use/configure/configuration-files",
+      "https://typescript-eslint.io/getting-started/",
+      "https://eslint.vuejs.org/user-guide/"
+    ],
+    "eslint": "10.12.0",
+    "eslint_plugin_vue": "10.11.1",
+    "typescript_eslint": "8.71.2"
+  },
+  "unit": {
+    "passed": 31,
+    "failed": 0,
+    "v1_retained": 20,
+    "v1_1_added": 11,
+    "command": "npm test",
+    "at_utc": "2026-10-13T09:58:13Z",
+    "fixture_only": true
+  },
+  "browser": {
+    "passed": 42,
+    "failed": 0,
+    "v1_retained": 18,
+    "v1_1_added": 24,
+    "command": "PLAYWRIGHT_CHANNEL=chrome npm run test:e2e",
+    "duration_seconds": 32.2,
+    "projects": [
+      "desktop-chromium",
+      "mobile-chromium",
+      "local-desktop-chromium",
+      "local-mobile-chromium"
+    ],
+    "ports": [
+      5187,
+      5190
+    ],
+    "existing_servers_not_reused": true,
+    "fixture_only": true
+  },
+  "production_build": {
+    "status": "PASS",
+    "command": "npm run build",
+    "vite": "7.3.7",
+    "duration_seconds": 3.77,
+    "js_bytes_kb": 126.93,
+    "css_bytes_kb": 31.21
+  },
+  "coverage": [
+    "V1 modeguard and mobile behaviors retained",
+    "Read-only public mode never fetches local API or Telegram health",
+    "Source faults excluded from market-risk count",
+    "Expandable versioned signal evidence",
+    "1h/2h/6h missing and pending windows preserved",
+    "Rule comparisons and missing-rate denominator explained",
+    "CSV/JSON whitelist export excludes unknown private config",
+    "CSV formula injection neutralized",
+    "Fresh source check does not hide stale successful data",
+    "Local Telegram PENDING and UNCERTAIN states without token/chat fields",
+    "Local health outage preserves independent token availability",
+    "HTTP 200 failure snapshots show SOURCE_ERROR and UNAVAILABLE without suggesting filter changes",
+    "Partial failures retain received rows with a homepage warning; failed-source status works without error strings",
+    "UNSUPPORTED BSC log capability alone does not become a collection failure"
+  ],
+  "limitations": [
+    "Fixture UI tests do not prove provider connectivity or Telegram delivery",
+    "Real V1.1 backend browser validation is recorded separately after service upgrade",
+    "Six-hour/twenty-four-hour soak and actual Telegram delivery remain explicitly PENDING unless separately verified"
+  ],
+  "resolved_test_failure": "New evidence test initially matched collapsed duplicate factor labels; locator scoped to the immutable signal ID and the entire suite reran successfully",
+  "real_local_smoke": {
+    "status": "PASS",
+    "fixture": false,
+    "report": "docs/evidence/frontend-v11-real-local/v11-real-browser-smoke.json",
+    "started_at_utc": "2026-10-13T09:51:41.083Z",
+    "finished_at_utc": "2026-10-13T09:51:52.744Z",
+    "mode": "LOCAL_LIVE",
+    "items": 1124,
+    "research_records": 0,
+    "research_status": "INSUFFICIENT_SAMPLE",
+    "telegram_configured": false,
+    "telegram_enabled": false,
+    "telegram_verification": "PENDING",
+    "writes_to_watchlist": false,
+    "browser_errors": 0,
+    "mobile_scroll_width": 412,
+    "mobile_client_width": 412,
+    "screenshots": 6
+  },
+  "real_smoke_notes": [
+    "Real services were read only; no mock routes or fixture data.",
+    "Legacy V1 confirmation events are not treated as V1.1 formal research records.",
+    "Initial smoke script exact navigation-name lookup included a decorative icon and timed out; the semantic selector was corrected, and the complete real smoke passed.",
+    "Mobile screenshots start from page top so the fixed navigation does not obscure panel headings.",
+    "Six-hour natural signal outcomes and Telegram real delivery remain PENDING; the empty research export is intentional."
+  ],
+  "source_failure_banner_fix": {
+    "status": "PASS",
+    "changed_files": [
+      "frontend/src/App.vue",
+      "frontend/tests/e2e/dashboard.spec.ts"
+    ],
+    "added_scenarios": 4,
+    "added_desktop_mobile_cases": 8,
+    "unit_passed": 31,
+    "e2e_passed": 42,
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "build": "PASS",
+    "fixture_only": true,
+    "real_local_smoke_note": "The separately timestamped real local smoke preceded this final banner fix. All affected failure paths are verified using explicit test fixtures; final deployed Pages smoke remains pending."
+  }
+}

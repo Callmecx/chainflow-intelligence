@@ -57,6 +57,49 @@ test('missing data is unavailable and never replaced by demo prices', async ({ p
   await expect(page.locator('.market-table tbody tr')).toHaveCount(0)
 })
 
+test('HTTP 200 failure snapshot shows source error and unavailable rather than empty filters', async ({ page }) => {
+  const snapshot = fixtureSnapshot({items:[],signals:[],provider_errors:['TEST_FIXTURE_SCAN_FAILED']})
+  snapshot.sources[0] = {...snapshot.sources[0]!,status:'SOURCE_ERROR',last_success_at:null,errors:1}
+  await page.route('**/snapshot.json',route=>route.fulfill({status:200,json:snapshot}))
+  await page.goto('./')
+  await expect(page.getByText('数据更新失败 · SOURCE_ERROR',{exact:true})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'行情暂不可用 · UNAVAILABLE'})).toBeVisible()
+  await expect(page.locator('.market-table tbody tr')).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'重置筛选',exact:true})).toHaveCount(0)
+  await expect(page.getByText('当前条件下暂无交易池',{exact:true})).toHaveCount(0)
+  await page.getByRole('link',{name:'查看来源异常 ↗'}).click()
+  await expect(page.getByText('TEST_FIXTURE_SCAN_FAILED',{exact:true})).toBeVisible()
+})
+
+test('partial provider errors preserve received rows and warn on the homepage', async ({ page }) => {
+  await page.route('**/snapshot.json',route=>route.fulfill({json:fixtureSnapshot({provider_errors:['TEST_FIXTURE_PARTIAL_FAILURE']})}))
+  await page.goto('./')
+  await expect(page.getByText('部分来源异常 · SOURCE_ERROR',{exact:true})).toBeVisible()
+  await expect(page.locator('.market-table tbody tr')).toHaveCount(2)
+  await expect(page.locator('.mode-banner')).toContainText('仅展示已取得的行情')
+  await expect(page.getByText('行情暂不可用 · UNAVAILABLE',{exact:true})).toHaveCount(0)
+})
+
+test('failed source status warns even when provider error strings are empty', async ({ page }) => {
+  const snapshot = fixtureSnapshot()
+  snapshot.sources.push({...snapshot.sources[0]!,id:'TEST_FIXTURE_FAILED_SOURCE',status:'UNAVAILABLE',last_success_at:null,errors:1})
+  await page.route('**/snapshot.json',route=>route.fulfill({json:snapshot}))
+  await page.goto('./')
+  await expect(page.getByText('部分来源异常 · SOURCE_ERROR',{exact:true})).toBeVisible()
+  await expect(page.locator('.market-table tbody tr')).toHaveCount(2)
+})
+
+test('unsupported BSC log capability alone does not become a source failure', async ({ page }) => {
+  const snapshot = fixtureSnapshot()
+  snapshot.sources.push({...snapshot.sources[0]!,id:'bsc_event_logs',status:'UNSUPPORTED',last_success_at:null,requests:0})
+  await page.route('**/snapshot.json',route=>route.fulfill({json:snapshot}))
+  await page.goto('./')
+  await expect(page.getByText('公开定时快照 · 非连续监控',{exact:true})).toBeVisible()
+  await expect(page.locator('.mode-banner')).not.toHaveClass(/warning/)
+  await expect(page.locator('.market-table tbody tr')).toHaveCount(2)
+  await expect(page.getByRole('link',{name:'查看来源异常 ↗'})).toHaveCount(0)
+})
+
 test('snapshot missing requested address explains the limit', async ({ page }) => {
   await page.goto('./')
   await page.getByRole('textbox',{name:'完整代币地址',exact:true}).fill('11111111111111111111111111111111')

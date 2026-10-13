@@ -21,7 +21,7 @@ Rust 版本由 `backend/Cargo.lock` 锁定；前端由 `frontend/package-lock.js
 
 本次已实际生成 [锁定 Rust 许可证清单](evidence/provider-dependency-licenses.json)，共 208 个包（含本项目与不同平台依赖），没有缺失许可证字段。启用 reqwest `system-proxy` 后新增 core-foundation、system-configuration、system-configuration-sys、windows-registry，四者均为 `MIT OR Apache-2.0`。唯一包含 LGPL 文本的 `r-efi 6.0.0` 提供 `MIT OR Apache-2.0 OR LGPL-2.1-or-later`，本项目选择 MIT 许可。另有 Unicode-3.0 数据、ISC、BSD、CDLA-Permissive-2.0（webpki 根证书数据）等独立通知义务；这些许可证不能仅因本项目 MIT 而被删除。此次没有发现必须按 GPL / AGPL / SSPL / BUSL 或 MPL 发布本项目原创源码的依赖。
 
-前端锁文件生成的 [npm 许可证清单](evidence/provider-frontend-dependency-licenses.json) 共 136 个包：127 MIT、5 Apache-2.0、2 ISC、1 BSD-2-Clause、1 BSD-3-Clause；没有缺失许可证字段，包含构建与测试依赖。这是本次锁文件的快照，更新依赖时需重新生成。
+V1.1 加入 ESLint 后，已重新从当前锁文件生成 [npm 许可证清单](evidence/provider-frontend-dependency-licenses.json)，共 234 个包：197 MIT、18 Apache-2.0、8 ISC、8 BSD-2-Clause、2 BSD-3-Clause、1 BlueOak-1.0.0；没有缺失许可证字段，包含构建与测试依赖。Rust 仍为 208 个包，清单中的本项目版本已更新至 1.1.0。这是锁文件的许可证元数据快照，更新依赖时需重新生成。
 
 ## API 与数据条款
 

@@ -11,6 +11,7 @@ if ($Port -ne 8787) { throw 'The frontend proxy uses port 8787. Keep the default
 $statePath = Join-Path $script:RuntimeRoot 'processes.json'
 if (Test-Path -LiteralPath $statePath) {
     $existing = Get-Content -Raw -LiteralPath $statePath | ConvertFrom-Json
+    if ([IO.Path]::GetFullPath($existing.workspace) -ne $script:ProjectRoot) { throw 'Workspace mismatch in process state; refusing to overwrite it.' }
     foreach ($entry in $existing.processes) {
         if (Test-ProcessIdentity $entry) { throw 'This project already has a managed process. Run stop.ps1 before restarting.' }
     }

@@ -1,0 +1,21 @@
+{
+  "recorded_at_utc": "2026-10-13T09:45:48.8859492Z",
+  "before_started": "2026-10-13T08:35:12.707Z",
+  "after_started": "2026-10-13T09:43:20.324Z",
+  "before_samples": 7265,
+  "after_samples": 7485,
+  "history_preserved": true,
+  "schema_version": 2,
+  "integrity": "ok",
+  "journal_mode": "wal",
+  "automatic_migration_backup_created": true,
+  "old_port_5173_preserved": true,
+  "telegram": {
+    "configured": false,
+    "enabled": false,
+    "exactly_once": false,
+    "last_delivery": null,
+    "queue": {},
+    "verification": "PENDING"
+  }
+}

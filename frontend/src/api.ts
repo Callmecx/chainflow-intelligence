@@ -1,4 +1,4 @@
-import type { Snapshot, TokenView, WatchItem } from './types'
+import type { LocalHealth, Snapshot, TokenView, WatchItem } from './types'
 
 export const localMode = import.meta.env.VITE_MODE === 'LOCAL_LIVE'
 async function request<T>(url: string, init: RequestInit = {}): Promise<T> {
@@ -15,6 +15,12 @@ export async function loadSnapshot(): Promise<Snapshot> {
 }
 export const lookup = (chain: string, address: string) => request<TokenView[]>(`/api/tokens/${encodeURIComponent(chain)}/${encodeURIComponent(address)}`)
 export const loadWatchlist = () => request<WatchItem[]>('/api/watchlist')
+export async function loadLocalHealth(): Promise<LocalHealth> {
+  if (!localMode) throw new Error('公开快照不访问本地健康或 Telegram 配置接口')
+  const health = await request<LocalHealth>('/api/health')
+  if (health.mode !== 'LOCAL_LIVE') throw new Error('本地健康接口模式不匹配')
+  return health
+}
 export const setWatch = async (chain: string, address: string, enabled: boolean) => {
   const response = await fetch(enabled ? '/api/watchlist' : `/api/watchlist/${encodeURIComponent(chain)}/${encodeURIComponent(address)}`, {
     method: enabled ? 'POST' : 'DELETE', headers: { 'Content-Type': 'application/json' },

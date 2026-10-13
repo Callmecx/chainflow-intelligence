@@ -1,17 +1,29 @@
-use crate::{config::Rules, engine, models::*};
+use crate::{
+    config::Rules,
+    engine,
+    models::*,
+    notifications::{
+        self, ClaimedNotification, DataFaultEvent, DeliveryOutcome, NotificationPolicy,
+    },
+    research,
+};
 use anyhow::{Context, Result};
 use rusqlite::{params, Connection, OptionalExtension};
 use serde_json::{json, Value};
 use std::{
     collections::{BTreeMap, HashMap},
     path::Path,
-    sync::mpsc,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        mpsc, Arc,
+    },
 };
 
 type Job = Box<dyn FnOnce(&mut Connection) + Send>;
 #[derive(Clone)]
 pub struct Store {
     tx: mpsc::SyncSender<Job>,
+    notifications_enabled: Arc<AtomicBool>,
 }
 impl Store {
     pub fn open(path: &str) -> Result<Self> {
@@ -24,7 +36,38 @@ impl Store {
         let conn = Connection::open(path)?;
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.busy_timeout(std::time::Duration::from_secs(5))?;
+        let version: i64 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
+        anyhow::ensure!(
+            version <= 2,
+            "database is from a newer schema; refusing downgrade"
+        );
+        let existing: bool = conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type='table' AND name='samples')",
+            [],
+            |r| r.get(0),
+        )?;
+        if existing && version < 2 {
+            let backup = Path::new(path)
+                .parent()
+                .unwrap_or(Path::new("."))
+                .join("backups")
+                .join(format!(
+                    "migration-v2-{}.sqlite",
+                    chrono::Utc::now().format("%Y%m%dT%H%M%S%fZ")
+                ));
+            std::fs::create_dir_all(backup.parent().unwrap())?;
+            conn.execute("VACUUM INTO ?1", [backup.to_string_lossy().to_string()])?;
+            let checked =
+                Connection::open_with_flags(&backup, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+            let integrity: String =
+                checked.query_row("PRAGMA integrity_check", [], |r| r.get(0))?;
+            anyhow::ensure!(integrity == "ok", "pre-migration backup integrity failed");
+        }
         conn.execute_batch("CREATE TABLE IF NOT EXISTS samples (key TEXT NOT NULL,at TEXT NOT NULL,json TEXT NOT NULL,PRIMARY KEY(key,at)); CREATE INDEX IF NOT EXISTS samples_at ON samples(at); CREATE TABLE IF NOT EXISTS views (key TEXT PRIMARY KEY,json TEXT NOT NULL); CREATE TABLE IF NOT EXISTS signals (id TEXT PRIMARY KEY,token TEXT NOT NULL,rule TEXT NOT NULL,at TEXT NOT NULL,json TEXT NOT NULL); CREATE INDEX IF NOT EXISTS signals_cooldown ON signals(token,rule,at); CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY,json TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watchlist (chain TEXT NOT NULL,address TEXT NOT NULL,PRIMARY KEY(chain,address));")?;
+        conn.execute_batch("BEGIN IMMEDIATE;")?;
+        research::init_schema(&conn)?;
+        notifications::init_schema(&conn)?;
+        conn.execute_batch("CREATE TABLE IF NOT EXISTS source_health(id TEXT PRIMARY KEY, json TEXT NOT NULL); PRAGMA user_version=2; COMMIT;")?;
         let (tx, rx) = mpsc::sync_channel::<Job>(64);
         std::thread::Builder::new()
             .name("sqlite-single-writer".into())
@@ -34,7 +77,10 @@ impl Store {
                     job(&mut conn)
                 }
             })?;
-        Ok(Self { tx })
+        Ok(Self {
+            tx,
+            notifications_enabled: Arc::new(AtomicBool::new(false)),
+        })
     }
     async fn call<T: Send + 'static>(
         &self,
@@ -57,6 +103,7 @@ impl Store {
         errors: Vec<String>,
         rules: Rules,
     ) -> Result<usize> {
+        let notifications_enabled = self.notifications_enabled.load(Ordering::Relaxed);
         self.call(move|c| {
             let tx=c.transaction()?;let mut dedup:BTreeMap<String,TokenSnapshot>=BTreeMap::new();
             for mut t in items {
@@ -79,16 +126,20 @@ impl Store {
                 let history={
                     let mut stmt=tx.prepare("SELECT json FROM samples WHERE key=?1 AND at>=?2 ORDER BY at")?;
                     let rows=stmt.query_map(params![key,first],|r|r.get::<_,String>(0))?;
-                    let mut history=Vec::new();for row in rows {let p:TokenSnapshot=serde_json::from_str(&row?)?;history.push(Point{at:p.fetched_at,price_usd:p.price_usd,liquidity_usd:p.liquidity_usd,volume_24h_usd:p.volume_24h_usd});}
+                    let mut history=Vec::new();for row in rows {let p:TokenSnapshot=serde_json::from_str(&row?)?;history.push(Point::from(&p));}
                     history
                 };
                 let clock=chrono::Utc::now();
                 let (mut view,emitted)=engine::evaluate(t,previous.as_ref(),history,&rules,clock);
                 for sig in emitted {
-                    let token=format!("{}:{}",sig.chain,sig.token_address);
+                    let token=format!("{}:{}:{}",sig.chain,sig.token_address,sig.pool_address);
                     let last:Option<String>=tx.query_row("SELECT at FROM signals WHERE token=?1 AND rule=?2 ORDER BY at DESC LIMIT 1",params![token,sig.rule],|r|r.get(0)).optional()?;
                     if last.as_deref().and_then(timestamp).is_some_and(|at|(clock-at).num_seconds()<rules.cooldown_seconds) {continue}
-                    tx.execute("INSERT OR IGNORE INTO signals(id,token,rule,at,json) VALUES(?1,?2,?3,?4,?5)",params![sig.id,token,sig.rule,sig.at,serde_json::to_string(&sig)?])?;
+                    let inserted=tx.execute("INSERT OR IGNORE INTO signals(id,token,rule,at,json) VALUES(?1,?2,?3,?4,?5)",params![sig.id,token,sig.rule,sig.at,serde_json::to_string(&sig)?])?;
+                    if inserted>0 {
+                        research::register(&tx,&sig,&view.token,&rules)?;
+                        notifications::enqueue_signal(&tx,&sig,&view,clock.timestamp(),&NotificationPolicy::default(),notifications_enabled)?;
+                    }
                     view.timeline.push(sig);
                 }
                 view.timeline=view.timeline.into_iter().rev().take(40).collect::<Vec<_>>().into_iter().rev().collect();
@@ -98,16 +149,29 @@ impl Store {
                 accepted+=1;
             }
             for source in &sources {
+                let prior:Option<String>=tx.query_row("SELECT json FROM source_health WHERE id=?1",[&source.id],|r|r.get(0)).optional()?;
+                let mut health:Value=prior.map(|s|serde_json::from_str(&s)).transpose()?.unwrap_or(json!({"id":source.id,"consecutive_failures":0,"recoveries":0}));
+                let failed=source.status=="SOURCE_ERROR"||source.status=="UNAVAILABLE";
+                if health["last_checked_at"]!=source.checked_at {
+                    let previous_failures=health["consecutive_failures"].as_u64().unwrap_or(0);
+                    health["consecutive_failures"]=json!(if failed {previous_failures+1}else{0});
+                    if !failed && previous_failures>0 {health["recoveries"]=json!(health["recoveries"].as_u64().unwrap_or(0)+1);}
+                    health["last_checked_at"]=json!(source.checked_at);
+                }
+                health["last_success_at"]=json!(source.last_success_at);
+                tx.execute("INSERT INTO source_health(id,json) VALUES(?1,?2) ON CONFLICT(id) DO UPDATE SET json=excluded.json",params![source.id,serde_json::to_string(&health)?])?;
                 if source.status=="SOURCE_ERROR" || source.status=="UNAVAILABLE" {
                     let token=format!("source:{}",source.id);let rule="SOURCE_DISCONNECTED";
                     let last:Option<String>=tx.query_row("SELECT at FROM signals WHERE token=?1 AND rule=?2 ORDER BY at DESC LIMIT 1",params![token,rule],|r|r.get(0)).optional()?;
                     if last.as_deref().and_then(timestamp).is_none_or(|at|(chrono::Utc::now()-at).num_seconds()>=rules.cooldown_seconds) {
-                        let at=now();let sig=Signal{id:format!("{token}:{at}"),chain:"system".into(),token_address:source.id.clone(),pool_address:String::new(),rule:rule.into(),severity:"RISK".into(),at:at.clone(),state:"INVALIDATED".into(),message:format!("数据源不可用：{}",source.id),evidence:vec![source.detail.clone(),format!("last_success={:?}",source.last_success_at)]};
+                        let at=now();let sig=Signal{id:format!("{token}:{at}"),chain:"system".into(),token_address:source.id.clone(),pool_address:String::new(),rule:rule.into(),severity:"DATA_FAULT".into(),at:at.clone(),state:"DEGRADED".into(),message:format!("数据源不可用：{}（不推断为市场撤资）",source.id),evidence:vec![source.detail.clone(),format!("last_success={:?}",source.last_success_at)],category:"DATA_FAULT".into(),rule_version:crate::structures::RULE_VERSION.into(),source_at:source.checked_at.clone(),..Default::default()};
                         tx.execute("INSERT OR IGNORE INTO signals(id,token,rule,at,json) VALUES(?1,?2,?3,?4,?5)",params![sig.id,token,rule,at,serde_json::to_string(&sig)?])?;
                     }
                 }
+                if failed {notifications::enqueue_data_fault(&tx,&DataFaultEvent{id:format!("source:{}:{}",source.id,source.checked_at),source:source.id.clone(),at:source.checked_at.clone(),consecutive_failures:health["consecutive_failures"].as_u64().unwrap_or(0),last_success_at:source.last_success_at.clone(),error_class:"SOURCE_UNAVAILABLE".into()},chrono::Utc::now().timestamp(),&NotificationPolicy::default(),notifications_enabled)?;}
             }
-            for (key,value) in [("sources",serde_json::to_string(&sources)?),("provider_errors",serde_json::to_string(&errors)?),("last_scan_at",serde_json::to_string(&now())?)] {tx.execute("INSERT INTO meta(key,json) VALUES(?1,?2) ON CONFLICT(key) DO UPDATE SET json=excluded.json",params![key,value])?;}
+            research::refresh(&tx,chrono::Utc::now())?;
+            for (key,value) in [("sources",serde_json::to_string(&sources)?),("provider_errors",serde_json::to_string(&errors)?),("last_scan_at",serde_json::to_string(&now())?),("rules",serde_json::to_string(&rules)?)] {tx.execute("INSERT INTO meta(key,json) VALUES(?1,?2) ON CONFLICT(key) DO UPDATE SET json=excluded.json",params![key,value])?;}
             tx.commit()?;Ok(accepted)
         }).await
     }
@@ -130,7 +194,17 @@ impl Store {
             for row in stmt.query_map([],|r|r.get::<_,String>(0))? {snapshot.signals.push(serde_json::from_str(&row?)?);}
             let count:i64=c.query_row("SELECT count(*) FROM samples",[],|r|r.get(0))?;
             let alerts:i64=c.query_row("SELECT count(*) FROM signals",[],|r|r.get(0))?;
-            snapshot.metrics=json!({"samples":count,"pools":snapshot.items.len(),"signals":alerts,"research":research(&snapshot.items),"rules_are_investment_advice":false});
+            let mut signal_counts=json!({"WATCH":0,"RISK":0,"CONFIRMATION":0,"DATA_FAULT":0});
+            let mut counts=c.prepare("SELECT CASE WHEN json_extract(json,'$.chain')='system' THEN 'DATA_FAULT' ELSE json_extract(json,'$.severity') END, COUNT(*) FROM signals GROUP BY 1")?;
+            for row in counts.query_map([],|r|Ok((r.get::<_,String>(0)?,r.get::<_,i64>(1)?)))? {let(k,n)=row?;signal_counts[k]=json!(n);}
+            let mut source_health=Vec::<Value>::new();let mut stmt=c.prepare("SELECT json FROM source_health ORDER BY id")?;
+            for row in stmt.query_map([],|r|r.get::<_,String>(0))? {let mut h:Value=serde_json::from_str(&row?)?;h["source_age_seconds"]=json!(h["last_success_at"].as_str().and_then(timestamp).map(|at|(chrono::Utc::now()-at).num_seconds().max(0)));source_health.push(h);}
+            snapshot.metrics=json!({"samples":count,"pools":snapshot.items.len(),"signals":alerts,"signal_counts":signal_counts,"source_health":source_health,"research":research(&snapshot.items),"rules_are_investment_advice":false});
+            research::refresh(c,chrono::Utc::now())?;
+            let rule_json:Option<String>=c.query_row("SELECT json FROM meta WHERE key='rules'",[],|r|r.get(0)).optional()?;
+            let rules:Rules=rule_json.map(|s|serde_json::from_str(&s)).transpose()?.unwrap_or_default();
+            snapshot.research=research::report(c,rules.research_min_samples)?;
+            if mode=="LOCAL_LIVE" {snapshot.metrics["notification_counts"]=notifications::status(c,false,false)?["queue"].clone();}
             if mode=="LOCAL_LIVE" {snapshot.max_staleness_seconds=300;}
             Ok(snapshot)
         }).await
@@ -141,6 +215,48 @@ impl Store {
                 c.prepare("SELECT chain,address FROM watchlist ORDER BY chain,address")?;
             let rows = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?;
             Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
+        })
+        .await
+    }
+    pub async fn configure_notifications(&self, enabled: bool) -> Result<Value> {
+        self.notifications_enabled.store(enabled, Ordering::Relaxed);
+        self.call(|c| notifications::recover(c, chrono::Utc::now().timestamp()))
+            .await
+    }
+    pub async fn notification_status(&self, configured: bool, enabled: bool) -> Result<Value> {
+        self.call(move |c| notifications::status(c, configured, enabled))
+            .await
+    }
+    pub async fn claim_notification(&self) -> Result<Option<ClaimedNotification>> {
+        self.call(|c| {
+            notifications::claim(
+                c,
+                chrono::Utc::now().timestamp(),
+                &NotificationPolicy::default(),
+            )
+        })
+        .await
+    }
+    pub async fn finish_notification(
+        &self,
+        job: ClaimedNotification,
+        result: DeliveryOutcome,
+    ) -> Result<()> {
+        self.call(move |c| {
+            notifications::finish(
+                c,
+                &job,
+                &result,
+                chrono::Utc::now().timestamp(),
+                &NotificationPolicy::default(),
+            )
+        })
+        .await
+    }
+    pub async fn research(&self, min_samples: usize) -> Result<Value> {
+        self.call(move |c| {
+            research::refresh(c, chrono::Utc::now())?;
+            research::report(c, min_samples)
         })
         .await
     }
@@ -178,7 +294,7 @@ impl Store {
         .await
     }
     pub async fn doctor(&self) -> Result<Value> {
-        self.call(|c|{let integrity:String=c.query_row("PRAGMA integrity_check",[],|r|r.get(0))?;let mode:String=c.query_row("PRAGMA journal_mode",[],|r|r.get(0))?;let count:i64=c.query_row("SELECT count(*) FROM samples",[],|r|r.get(0))?;Ok(json!({"integrity_check":integrity,"journal_mode":mode,"samples":count,"checked_at":now()}))}).await
+        self.call(|c|{let integrity:String=c.query_row("PRAGMA integrity_check",[],|r|r.get(0))?;let mode:String=c.query_row("PRAGMA journal_mode",[],|r|r.get(0))?;let count:i64=c.query_row("SELECT count(*) FROM samples",[],|r|r.get(0))?;let version:i64=c.query_row("PRAGMA user_version",[],|r|r.get(0))?;Ok(json!({"integrity_check":integrity,"journal_mode":mode,"samples":count,"schema_version":version,"checked_at":now()}))}).await
     }
     pub async fn archive(&self, output: &str, retention_days: i64) -> Result<usize> {
         anyhow::ensure!(retention_days >= 1, "retention must be at least 1 day");
@@ -299,12 +415,160 @@ mod tests {
         }
     }
     #[tokio::test]
+    async fn v1_schema_migrates_with_verified_backup_and_preserves_history() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("legacy.sqlite");
+        let legacy = Connection::open(&path).unwrap();
+        legacy.execute_batch("CREATE TABLE samples(key TEXT,at TEXT,json TEXT,PRIMARY KEY(key,at)); CREATE TABLE watchlist(chain TEXT,address TEXT,PRIMARY KEY(chain,address));").unwrap();
+        let t = sample("2026-01-01T00:00:00.000Z");
+        legacy
+            .execute(
+                "INSERT INTO samples VALUES(?1,?2,?3)",
+                params![t.key(), t.fetched_at, serde_json::to_string(&t).unwrap()],
+            )
+            .unwrap();
+        legacy
+            .execute(
+                "INSERT INTO watchlist VALUES('solana',?1)",
+                [&t.token_address],
+            )
+            .unwrap();
+        drop(legacy);
+        let store = Store::open(path.to_str().unwrap()).unwrap();
+        let doctor = store.doctor().await.unwrap();
+        assert_eq!(doctor["schema_version"], 2);
+        assert_eq!(doctor["samples"], 1);
+        assert_eq!(doctor["integrity_check"], "ok");
+        assert_eq!(store.watchlist().await.unwrap().len(), 1);
+        assert_eq!(
+            store.research(30).await.unwrap()["total_records"],
+            0,
+            "legacy signals must not become invented prospective signals"
+        );
+        let backups: Vec<_> = std::fs::read_dir(dir.path().join("backups"))
+            .unwrap()
+            .collect();
+        assert_eq!(backups.len(), 1);
+        let saved = Connection::open(backups[0].as_ref().unwrap().path()).unwrap();
+        assert_eq!(
+            saved
+                .query_row("SELECT count(*) FROM samples", [], |r| r.get::<_, i64>(0))
+                .unwrap(),
+            1
+        );
+        assert_eq!(
+            saved
+                .query_row("PRAGMA user_version", [], |r| r.get::<_, i64>(0))
+                .unwrap(),
+            0
+        );
+    }
+    #[tokio::test]
+    async fn pool_isolation_signal_research_and_public_boundary() {
+        let dir = tempfile::tempdir().unwrap();
+        let db = Store::open(dir.path().join("isolation.sqlite").to_str().unwrap()).unwrap();
+        let at = now();
+        let mut first = sample(&at);
+        first.source = "FIXTURE".into();
+        let mut second = first.clone();
+        second.pool_address = "second-pool".into();
+        let mut bsc = first.clone();
+        bsc.chain = "bsc".into();
+        bsc.token_address = "0x0000000000000000000000000000000000000001".into();
+        db.ingest(
+            vec![first.clone(), second, bsc],
+            vec![],
+            vec![],
+            Rules::default(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(db.snapshot("LOCAL_LIVE").await.unwrap().items.len(), 3);
+        let captured = first.clone();
+        db.call(move |c| {
+            let sig = Signal {
+                id: "fixture-confirmation".into(),
+                chain: captured.chain.clone(),
+                token_address: captured.token_address.clone(),
+                pool_address: captured.pool_address.clone(),
+                rule: "STATE_CONFIRMED".into(),
+                rule_version: "TEST_ONLY".into(),
+                state: "CONFIRMED".into(),
+                severity: "CONFIRMATION".into(),
+                at: captured.fetched_at.clone(),
+                source_at: captured.fetched_at.clone(),
+                baseline_price_usd: captured.price_usd,
+                evidence_snapshot: serde_json::to_value(&captured)?,
+                ..Default::default()
+            };
+            research::register(c, &sig, &captured, &Rules::default())?;
+            research::register(c, &sig, &captured, &Rules::default())?;
+            Ok(())
+        })
+        .await
+        .unwrap();
+        let r = db.research(30).await.unwrap();
+        assert_eq!(r["total_records"], 1);
+        assert_eq!(r["records"][0]["windows"]["1h"]["status"], "PENDING");
+        assert!(r["records"][0]["windows"]["1h"]["return_pct"].is_null());
+        let public = db.snapshot("PUBLIC_SNAPSHOT").await.unwrap();
+        assert!(public.metrics.get("notification_counts").is_none());
+        assert!(public.metrics.get("runtime").is_none());
+        assert_eq!(
+            db.notification_status(false, false).await.unwrap()["enabled"],
+            false
+        );
+    }
+    #[tokio::test]
+    async fn data_fault_counters_are_separate_and_recover_without_market_risk() {
+        let dir = tempfile::tempdir().unwrap();
+        let db = Store::open(dir.path().join("health.sqlite").to_str().unwrap()).unwrap();
+        for i in 0..3 {
+            let at = (chrono::Utc::now() - chrono::Duration::seconds(3 - i)).to_rfc3339();
+            db.ingest(
+                vec![],
+                vec![SourceStatus {
+                    id: "fixture_source".into(),
+                    status: "SOURCE_ERROR".into(),
+                    checked_at: at,
+                    ..Default::default()
+                }],
+                vec!["fixture timeout".into()],
+                Rules::default(),
+            )
+            .await
+            .unwrap();
+        }
+        let s = db.snapshot("LOCAL_LIVE").await.unwrap();
+        assert_eq!(s.metrics["signal_counts"]["RISK"], 0);
+        assert_eq!(s.metrics["signal_counts"]["DATA_FAULT"], 1);
+        assert_eq!(s.metrics["source_health"][0]["consecutive_failures"], 3);
+        db.ingest(
+            vec![],
+            vec![SourceStatus {
+                id: "fixture_source".into(),
+                status: "OK".into(),
+                checked_at: now(),
+                last_success_at: Some(now()),
+                ..Default::default()
+            }],
+            vec![],
+            Rules::default(),
+        )
+        .await
+        .unwrap();
+        let s = db.snapshot("LOCAL_LIVE").await.unwrap();
+        assert_eq!(s.metrics["source_health"][0]["consecutive_failures"], 0);
+        assert_eq!(s.metrics["source_health"][0]["recoveries"], 1);
+        assert!(s.items.is_empty());
+    }
+    #[tokio::test]
     async fn dedup_restart_out_of_order_and_cooldown() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("test.sqlite");
         let path = path.to_str().unwrap();
         let db = Store::open(path).unwrap();
-        let at = now();
+        let at = (chrono::Utc::now() - chrono::Duration::seconds(240)).to_rfc3339();
         let a = sample(&at);
         let mut b = a.clone();
         b.source = "second".into();

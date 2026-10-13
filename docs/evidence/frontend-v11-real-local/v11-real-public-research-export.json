@@ -1,0 +1,14 @@
+{
+  "kind": "SAMPLED_SIGNAL_RESEARCH",
+  "generated_at_utc": "2026-10-13T09:51:42.100Z",
+  "status": "INSUFFICIENT_SAMPLE",
+  "min_sample_size": 30,
+  "records": [],
+  "rule_stats": [],
+  "limitations": [
+    "基于正式信号的前瞻SAMPLED记录；不回填旧版信号",
+    "MISSING/CENSORED保留统计分母，缺行情不归零",
+    "费用、滑点和采样间的极值均未建模；不宣称盈利优势",
+    "窗口在目标时间+容差后首次评估冻结；数据断档会明确删失"
+  ]
+}

@@ -1,22 +1,30 @@
 {
   "name": "chainflow-intelligence",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vue-tsc --noEmit && vite build",
     "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
-  "dependencies": { "vue": "^3.5.22" },
+  "dependencies": {
+    "vue": "^3.5.22"
+  },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.7.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-vue": "^10.11.1",
+    "globals": "^17.13.0",
     "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.2",
     "vite": "^7.1.9",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.1.1"

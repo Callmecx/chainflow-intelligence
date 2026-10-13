@@ -1,10 +1,10 @@
 # GitHub 发布与免费快照部署
 
-目标为公开仓库 `Callmecx/chainflow-intelligence`。是否实际创建、推送、CI 通过和 Pages 可访问，以 [ACCEPTANCE.md](ACCEPTANCE.md) 的远端证据为准。
+公开仓库为 [Callmecx/chainflow-intelligence](https://github.com/Callmecx/chainflow-intelligence)，公开站点为 [GitHub Pages](https://callmecx.github.io/chainflow-intelligence/)。本文描述 V1.1 当前发布流程；当前发布核对见 [V1_1_ACCEPTANCE.md](V1_1_ACCEPTANCE.md)，V1 历史记录见 [ACCEPTANCE.md](ACCEPTANCE.md)。新版本的提交、CI 和 Pages 状态须按该版本的实际远端证据确认，不能沿用 V1 成功状态。
 
 ## 费用与使用边界
 
-本项目不采购 API、云服务器、数据库、域名或订阅，不配置信用卡。GitHub 公开仓库的标准 GitHub-hosted runner 运行时间通常免费；larger runner 始终计费，因此工作流仅使用 `ubuntu-latest` 标准 runner。构件仅短期保留，不使用付费存储或远端持久数据库。[GitHub Actions 计费](https://docs.github.com/en/billing/concepts/product-billing/github-actions)
+本项目不采购 API、云服务器、数据库、域名或订阅，不配置信用卡。GitHub 公开仓库的标准 GitHub-hosted runner 运行时间免费；larger runner 计费，因此工作流只使用 `ubuntu-latest` 和 Windows 脚本测试需要的 `windows-latest` 标准 runner。Pages 构件保留 1 天、失败浏览器诊断保留 3 天；不扩容付费存储或部署远端持久数据库，仍应留意账户的构件/缓存配额。[GitHub Actions 计费](https://docs.github.com/en/billing/concepts/product-billing/github-actions)
 
 Pages 是静态托管，没有 Rust/Tokio 常驻进程。页面定位为非商业开源演示/研究快照，不用于商业交易或商业 SaaS。[Pages 使用限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
 
@@ -22,7 +22,7 @@ git remote -v
 
 未登录时由仓库拥有者在终端运行 `gh auth login` 并完成浏览器验证。不要把 PAT、密码或私钥发给协作者。已存在目标仓库时先 fetch 比较历史并安全合并，不覆盖、不强推。发布前确认 `.env`、数据库、日志、`.runtime`、`.tools`、用户记录均未跟踪。
 
-仅在本地构建和测试通过且目标仓库不存在时：
+下面的创建命令仅记录首次初始化流程；当前目标仓库已经存在，不应再次创建或替换。只有本地构建/测试通过且新目标确实不存在时才适用：
 
 ```powershell
 gh repo create Callmecx/chainflow-intelligence --public --source . --remote origin --push
@@ -38,11 +38,15 @@ CLI 也可在已有权限时通过 GitHub Pages REST API 设为 workflow 模式�
 
 ## 工作流行为
 
-`ci.yml` 在 main 推送、PR 或手动触发，执行 Rust fmt/clippy/test、前端 typecheck/unit/build，以及 Chromium Playwright 页面测试。测试依赖 fixture，不把外部免费服务瞬时可用性作为确定性单测条件。
+`ci.yml` 在 main 推送、PR 或手动触发，执行 Rust fmt/clippy/test、前端 typecheck/lint/unit/build、Chromium Playwright 页面测试，以及 `windows-latest` 上的 PowerShell 离线观察脚本测试。自动化测试依赖明确标记的 fixture，不把外部免费服务瞬时可用性作为确定性单测条件，也不等同于真实 Telegram 发送或自然长跑。
 
 `pages.yml` 在 main 推送、手动触发、UTC `17,47 * * * *` 执行：构建 Rust → `scan-once` 采集真实公开数据 → 校验快照 → `VITE_MODE=PUBLIC_SNAPSHOT` 构建 Vue → 上传静态构件 → 部署 Pages。扫描失败、超时或输出异常时生成 `SOURCE_ERROR` 空快照，明确“数据更新失败 / 无最新数据”，不会替换成假代币。构建或部署本身失败时旧站点可能继续存在，页面时间戳会进入 STALE。
 
-Vite base 固定 `/chainflow-intelligence/`；详情采用 hash 路由。每次扫描使用临时 SQLite，不跨次保存历史。快照仅进入构件，不能每半小时提交到 Git。所有公开资产必须无敏感凭证。
+Vite base 固定 `/chainflow-intelligence/`；详情采用 hash 路由。`scan-once` 省略 `--db` 会创建唯一临时库；显式 `--db` 必须指向新文件，已有数据库一律拒绝。Actions 使用该次 runner 的隔离库，不跨次保存历史，也不读取本机数据。快照仅进入构件，不能每半小时提交到 Git。PUBLIC_SNAPSHOT 不启动 Telegram 发送、不公开通知配置、私人关注名单、数据库或运行 PID。无需为 Pages 设置 Telegram Secrets。
+
+## 求职作品封版范围
+
+V1.1 以 PORTFOLIO_READY 稳定封版：核心本地功能、自动化检查、真实短 Canary、CI 与公开站点分别保存证据。Telegram 真实投递及 6h/24h 自然长跑目前为 **PENDING**，按本次范围不阻塞发布，也不能写成已验证。作品讲解和可复查测试入口见 [PORTFOLIO_GUIDE.md](PORTFOLIO_GUIDE.md)；本文件不代替最终提交与部署验收。
 
 ## 验证实际部署
 
@@ -53,4 +57,4 @@ gh run list --repo Callmecx/chainflow-intelligence --limit 6
 gh api repos/Callmecx/chainflow-intelligence/pages --jq .html_url
 ```
 
-使用 Pages API 返回的 `html_url` 验证实际 HTTP 响应，并在真实浏览器打开首页、至少一个 token 详情、手机视图、复制完整地址、外链、数据源 UTC 时间、空数据和 STALE 状态。仅有成功 push 不代表 CI 成功；只有部署工作流成功也不能替代页面 HTTP/交互验证。失败记录应附实际 run URL 和原因。
+使用 Pages API 返回的 `html_url` 验证实际 HTTP 响应，并在真实浏览器打开首页、至少一个 token 详情、手机视图、复制完整地址、外链、数据源 UTC 时间、空数据和 STALE 状态。故障快照也可能正常返回 HTTP 200，必须继续核对 mode、时间、items、provider_errors 及页面错误提示。仅有成功 push 不代表 CI 成功；部署工作流成功也不能替代页面 HTTP/交互验证。失败记录应附实际 run URL 和原因。

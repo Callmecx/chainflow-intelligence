@@ -1,6 +1,6 @@
 # 免费数据源、字段和实测证据
 
-核验日期：2026-10-13；所有请求只读取公开数据，没有 API key、付费套餐或交易签名。时间存储为 UTC，金额单位为 USD。动态行情可能在打开链接时已变化；下面的历史值仅用于连接与字段核验。
+核验日期：2026-10-13；本文描述 V1.1 采集实现，示例响应中的时点保留其 V1 原始实测时间。行情/RPC 请求只读取公开数据，没有行情 API key、付费套餐或交易签名。时间存储为 UTC，金额单位为 USD。动态行情可能在打开链接时已变化；下面的历史值仅用于连接与字段核验。可选 Telegram 使用用户自己的本机凭据，与免费行情来源分开，真实投递仍为 PENDING。
 
 ## 免费来源与实际能力
 
@@ -15,11 +15,17 @@ Gecko 的官方 API 文档写约 10 calls/min，CoinGecko 帮助页曾写 30 cal
 
 ## 扫描预算与持续观察
 
-每轮采集 Gecko 两链各一页 new/trending，每页最多保留 12 个池；DEX profiles/boosts 每类每链最多加入 8 个地址。每链按优先级最多 90 个代币，30 地址一批，最多 3 批；每 token 最多 4 个流动性较高的池。调用方传入个人关注和近期发现的优先顺序被保留，超过预算会写 `provider_errors`，不会谎报完整覆盖。基准 WSOL/WBNB 标记 `BASELINE`，用于连接对照，不能把它们视作新币或策略信号。
+本地私人观察名单总计最多 60 个地址。`AppState::scan` 先保留私人关注，再按待完成的正式信号研究、已确认/确认候选、普通 WATCH、其余历史池的顺序补充持续跟踪，同类别优先补充较久未采样者；每链优先跟踪列表最多 80 个地址。该预算是本机的调度选择，不代表 Provider 接口的官方限额，也不保证列表之外的旧池持续有样本。
+
+每轮采集 Gecko 两链各一页 new/trending，每页最多保留 12 个池；DEX profiles/boosts 每类每链最多加入 8 个地址。DEX 层先放基准 WSOL/WBNB，再按调用方顺序放跟踪地址，之后才是其余发现地址；每链总体最多 90 个代币，30 地址一批、最多 3 批，每 token 最多保留 4 个流动性较高的池。因此“80 个优先跟踪”和“90 个 DEX 总体预算”是两层不同约束，留余量不保证发现列表全覆盖。超过 DEX 总预算的跟踪地址会写 `provider_errors`。基准币标记 `BASELINE`，用于连接对照，不能视作新币或策略信号。
+
+数据分工明确：DEX / Gecko 提供 USD 池行情和部分发现覆盖；Solana / BSC RPC 当前只做基准账户/链状态读取验证，不为每个发现代币执行安全审计，不承担全链 Swap 索引。市场风险 RISK 与来源故障 DATA_FAULT 分开，不能把 RPC 探测失败解释为代币撤资。
 
 `latest/dex/search` 与 `latest/dex/pairs` 已提供 Provider 读取方法，精确搜索界面通过 token-pairs 与 Gecko token pools 查询。Gecko OHLCV / recent trades 提供读取方法并共享限流，但本轮 UI 使用 SQLite 实际抓取后的 `SAMPLED` 观察曲线；没有把抽样价格伪装为逐笔 K 线。recent trades 的原始链上哈希字段随响应保留，但不作为全网成交覆盖承诺。
 
-任何一个独立端点失败都会保留错误，并继续其他端点。HTTP 429 / 503 支持指数退避和 Retry-After（秒或 HTTP 日期）；长冷却保留在共享桶中并提前返回，避免一次扫描被挂住。403 不重试，网络故障/超时最多 3 次。连接超时 5 秒、每次请求 10 秒。缓存返回时保留原抓取时间，过期缓存不会伪装成最新数据。请求计数是实际 HTTP 尝试次数，缓存命中不增加计数，重试失败会计入错误。
+任何一个独立端点失败都会保留错误，并继续其他端点。采集 HTTP 对 429 与全部 5xx 支持指数退避和 Retry-After（秒或 HTTP 日期）；长冷却保留在共享桶中并提前返回，避免一次扫描被挂住。403 等非 429 的 4xx 不重试；可重试错误及网络故障/超时最多尝试 3 次。连接超时 5 秒、每次请求 10 秒。缓存返回时保留原抓取时间，过期缓存不会伪装成最新数据。请求计数是实际 HTTP 尝试次数，缓存命中不增加计数；错误计数也可能包含响应结构或限流冷却错误，因此不是单纯 HTTP 非 2xx 数。
+
+进程内来源请求/错误计数重启后会重置；V1.1 SQLite `source_health` 另存最近检查、最近成功、连续失败与恢复信息。观察报告在跨重启或缺基线时明确计数覆盖不完整，不把缺失区间按 0 补齐。公开 `scan-once` 每次新建隔离数据库，显式 `--db` 必须尚不存在，不读取本机关注名单和私人连续历史。
 
 ## 字段语义
 
@@ -32,7 +38,11 @@ Gecko 的官方 API 文档写约 10 calls/min，CoinGecko 帮助页曾写 30 cal
 
 ## 真实连接样本
 
-机器可读记录在 [provider-validation.json](evidence/provider-validation.json)、[provider-rpc-probe.json](evidence/provider-rpc-probe.json) 和 [provider-additional-validation.json](evidence/provider-additional-validation.json)。原始完整大响应仅保留在本地 `data/provider-probes/`，不作为运行时回退。测试中两个小型公开响应片段位于 `backend/src/providers/fixtures/`，只用于显式离线回放。
+V1 原始接口连接记录在 [provider-validation.json](evidence/provider-validation.json)、[provider-rpc-probe.json](evidence/provider-rpc-probe.json) 和 [provider-additional-validation.json](evidence/provider-additional-validation.json)。原始完整大响应仅保留在本地 `data/provider-probes/`，不作为运行时回退。测试中两个小型公开响应片段位于 `backend/src/providers/fixtures/`，只用于显式离线回放。
+
+V1.1 的真实本地证据包括 [迁移与运行健康](evidence/v1-1-migration-runtime.json)、[浏览器实际行情/来源/研究页面](evidence/frontend-v11-real-local/v11-real-browser-smoke.json) 和 [真实代币案例](evidence/v1-1-real-token-case.json)。这些记录能证明各自时点的行为，不能替代 6h/24h 自然长跑或 Telegram 实际送达。后端 [62 项自动化测试记录](evidence/v1-1-backend-tests.txt) 与真实接口证据分开，其中 mock/fixture 不作为线上来源连接成功的依据。
+
+[V1.1 隔离公开扫描](evidence/v1-1-public-scan.json) 在 2026-10-13 09:53:35–09:54:25 UTC 实际运行 50.58 秒，取得 68 个池（SOL 41、BSC 27）。报告记录 12 次 HTTP 尝试、2 次中间错误后最终相关来源为 OK；BSC 全链事件仍为 UNSUPPORTED。这 68 条首次观察事件都是 WATCH，不能称为 68 条风险或确认。完整后续验收状态见 [V1_1_ACCEPTANCE.md](V1_1_ACCEPTANCE.md)。
 
 | 链 / 抓取 UTC | 完整 token 地址 | 完整 pool 地址与来源查证 |
 |---|---|---|

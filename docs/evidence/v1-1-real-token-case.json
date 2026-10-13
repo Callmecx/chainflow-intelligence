@@ -1,0 +1,359 @@
+{
+  "captured_at_utc": "2026-10-13T09:46:42.4671247Z",
+  "kind": "REAL_LOCAL_API_OBSERVATION",
+  "code_commit": "90251caaea2968c6efa42068edf470844b9a4920",
+  "privacy_note": "仅白名单摘录一个公开BASELINE代币；批量URL、其他观察币、运行目录、PID、通知配置和凭据均未收录。",
+  "local_api": {
+    "health_http_status": 200,
+    "token_http_status": 200,
+    "sources_http_status": 200,
+    "research_http_status": 200,
+    "mode": "LOCAL_LIVE",
+    "status": "OK",
+    "schema_version": 2,
+    "started_at": "2026-10-13T09:43:20.324Z",
+    "last_scan_at": "2026-10-13T09:45:53.04Z",
+    "token_path": "/api/tokens/solana/So11111111111111111111111111111111111111112"
+  },
+  "token": {
+    "chain": "solana",
+    "token_address": "So11111111111111111111111111111111111111112",
+    "pool_address": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "name": "Wrapped SOL",
+    "symbol": "SOL",
+    "discovery_labels": [
+      "BASELINE"
+    ],
+    "source": "dexscreener",
+    "fetched_at": "2026-10-13T09:45:28.559Z",
+    "first_seen_at": "2026-10-13T08:18:30.132Z",
+    "pool_created_at": "2023-06-30T14:20:58+08:00",
+    "price_usd": 107.2,
+    "liquidity_usd": 27866153.97,
+    "market_cap_usd": null,
+    "fdv_usd": null,
+    "state": "INVALIDATED",
+    "label": "RISK",
+    "why": [
+      "先前风险已使本轮观察失效，不自动重新确认"
+    ],
+    "incomplete_data": [
+      "HONEYPOT / TOP10 / SMART_MONEY = UNKNOWN；未独立验证",
+      "市值 UNKNOWN；FDV 不替代市值，不能满足市值筛选",
+      "同名代币：以完整合约和池地址为准，名称不能用于身份确认"
+    ],
+    "invalidation": [
+      "流动性下降≥30% 或价格回撤≥20%",
+      "TTL=7200s；数据失联不得升级"
+    ],
+    "history_total": 45,
+    "recent_five_samples": [
+      {
+        "at": "2026-10-13T09:37:21.392Z",
+        "source": "dexscreener",
+        "price_usd": 107.12,
+        "liquidity_usd": 27867698.86,
+        "volume_24h_usd": 127341648.24,
+        "buys_5m": 435,
+        "sells_5m": 152
+      },
+      {
+        "at": "2026-10-13T09:39:21.862Z",
+        "source": "dexscreener",
+        "price_usd": 107.15,
+        "liquidity_usd": 27857125.98,
+        "volume_24h_usd": 127443293.87,
+        "buys_5m": 404,
+        "sells_5m": 168
+      },
+      {
+        "at": "2026-10-13T09:41:21.299Z",
+        "source": "dexscreener",
+        "price_usd": 107.41,
+        "liquidity_usd": 27907847.91,
+        "volume_24h_usd": 127543094.57,
+        "buys_5m": 237,
+        "sells_5m": 80
+      },
+      {
+        "at": "2026-10-13T09:43:28.653Z",
+        "source": "dexscreener",
+        "price_usd": 107.27,
+        "liquidity_usd": 27879458.44,
+        "volume_24h_usd": 127850740.59,
+        "buys_5m": 201,
+        "sells_5m": 264
+      },
+      {
+        "at": "2026-10-13T09:45:28.559Z",
+        "source": "dexscreener",
+        "price_usd": 107.2,
+        "liquidity_usd": 27866153.97,
+        "volume_24h_usd": 127875629.5,
+        "buys_5m": 150,
+        "sells_5m": 267
+      }
+    ],
+    "timeline": [
+      {
+        "at": "2026-10-13T08:18:30.132Z",
+        "rule": "DISCOVERED",
+        "severity": "WATCH",
+        "state": "DISCOVERED",
+        "message": "首次获取公开行情，开始记录观察",
+        "rule_version": "",
+        "source_at": "",
+        "evidence": [
+          "[原始批量请求URL已省略；单池公开链接见references]"
+        ],
+        "legacy_metadata_missing": true
+      },
+      {
+        "at": "2026-10-13T08:20:29.711Z",
+        "rule": "STATE_WATCH",
+        "severity": "WATCH",
+        "state": "WATCH",
+        "message": "规则观察状态变化，不构成投资建议",
+        "rule_version": "",
+        "source_at": "",
+        "evidence": [
+          "DISCOVERED -> WATCH; observation_age=142s; eligible=false; sufficient_samples=false"
+        ],
+        "legacy_metadata_missing": true
+      },
+      {
+        "at": "2026-10-13T08:49:20.759Z",
+        "rule": "SELL_COUNT_IMBALANCE",
+        "severity": "RISK",
+        "state": "INVALIDATED",
+        "message": "卖出笔数占比偏高，笔数不代表净资金流",
+        "rule_version": "",
+        "source_at": "",
+        "evidence": [
+          "5m buys=12, sells=177"
+        ],
+        "legacy_metadata_missing": true
+      },
+      {
+        "at": "2026-10-13T08:49:20.759Z",
+        "rule": "STATE_INVALIDATED",
+        "severity": "WATCH",
+        "state": "INVALIDATED",
+        "message": "规则观察状态变化，不构成投资建议",
+        "rule_version": "",
+        "source_at": "",
+        "evidence": [
+          "WATCH -> INVALIDATED; observation_age=1873s; eligible=false; sufficient_samples=true"
+        ],
+        "legacy_metadata_missing": true
+      },
+      {
+        "at": "2026-10-13T09:15:21.898Z",
+        "rule": "SELL_COUNT_IMBALANCE",
+        "severity": "RISK",
+        "state": "INVALIDATED",
+        "message": "卖出笔数占比偏高，笔数不代表净资金流",
+        "rule_version": "",
+        "source_at": "",
+        "evidence": [
+          "5m buys=13, sells=198"
+        ],
+        "legacy_metadata_missing": true
+      }
+    ],
+    "events_since_service_start": 0,
+    "structure": {
+      "activity_recovery": false,
+      "breakout": false,
+      "factors": [
+        {
+          "evidence": [
+            "matched=false; source=dexscreener; at=2026-10-13T09:45:28.559Z"
+          ],
+          "name": "5m低点抬高",
+          "score": 0.0,
+          "value": 0.0,
+          "weight": 30.0
+        },
+        {
+          "evidence": [
+            "matched=false; source=dexscreener; at=2026-10-13T09:45:28.559Z"
+          ],
+          "name": "5m/15m同向结构",
+          "score": 0.0,
+          "value": 0.0,
+          "weight": 25.0
+        },
+        {
+          "evidence": [
+            "matched=false; source=dexscreener; at=2026-10-13T09:45:28.559Z"
+          ],
+          "name": "压缩平台突破",
+          "score": 0.0,
+          "value": 0.0,
+          "weight": 25.0
+        },
+        {
+          "evidence": [
+            "matched=true; source=dexscreener; at=2026-10-13T09:45:28.559Z"
+          ],
+          "name": "5m流动性维持",
+          "score": 20.0,
+          "value": 1.0,
+          "weight": 20.0
+        }
+      ],
+      "kind": "SAMPLED",
+      "limitations": [
+        "默认120秒轮询不能支持3m细粒度K线识别",
+        "同源SAMPLED点仅表示采样时刻，滚动成交笔数不等于独立成交量",
+        "采样缺口、源切换或缺价格时不确认结构"
+      ],
+      "multi_period": false,
+      "platform_high": 107.41,
+      "platform_low": 107.02,
+      "rule_version": "sampled-v1.1.0",
+      "score": 20.0,
+      "score_label": "可解释条件覆盖分，非上涨概率",
+      "windows": {
+        "15m": {
+          "activity_metric": "rolling_5m_transaction_count; overlapping windows, not money flow",
+          "activity_recovery": false,
+          "change_pct": 0.018660197798103795,
+          "first_at": "2026-10-13T09:27:21.298Z",
+          "first_half_low": 107.02,
+          "high_usd": 107.41,
+          "higher_lows": false,
+          "kind": "SAMPLED",
+          "last_at": "2026-10-13T09:45:28.559Z",
+          "low_usd": 107.02,
+          "range_pct": 0.36441786581946634,
+          "samples": 10,
+          "second_half_low": 107.12,
+          "status": "AVAILABLE"
+        },
+        "3m": {
+          "kind": "SAMPLED",
+          "reason": "同源连续样本、时间覆盖或精度不足；不是原始K线",
+          "status": "INSUFFICIENT_RESOLUTION"
+        },
+        "5m": {
+          "activity_metric": "rolling_5m_transaction_count; overlapping windows, not money flow",
+          "activity_recovery": false,
+          "change_pct": 0.04666355576294912,
+          "first_at": "2026-10-13T09:39:21.862Z",
+          "first_half_low": 107.15,
+          "high_usd": 107.41,
+          "higher_lows": false,
+          "kind": "SAMPLED",
+          "last_at": "2026-10-13T09:45:28.559Z",
+          "low_usd": 107.15,
+          "range_pct": 0.24265048996732208,
+          "samples": 4,
+          "second_half_low": 107.2,
+          "status": "AVAILABLE"
+        }
+      }
+    }
+  },
+  "source_verification": [
+    {
+      "id": "bsc_contract_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:45:24.52Z",
+      "last_success_at": "2026-10-13T09:45:24.52Z",
+      "detail": "eth_chainId=0x38; eth_blockNumber=0x797ae23; eth_call WBNB decimals=18; latest (not finality proof)"
+    },
+    {
+      "id": "bsc_event_logs",
+      "status": "UNSUPPORTED",
+      "checked_at": "2026-10-13T09:45:24.521Z",
+      "last_success_at": null,
+      "detail": "Official public BSC endpoints document eth_getLogs disabled; continuous full-chain swaps are unsupported"
+    },
+    {
+      "id": "bsc_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:45:24.52Z",
+      "last_success_at": "2026-10-13T09:45:24.52Z",
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_market_solana",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:45:32.555Z",
+      "last_success_at": "2026-10-13T09:45:32.555Z",
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "solana_mint_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:45:20.991Z",
+      "last_success_at": "2026-10-13T09:45:20.991Z",
+      "detail": "getAccountInfo mint=So11111111111111111111111111111111111111112; slot=456397402; commitment=confirmed; no transaction signature because this is an account read"
+    },
+    {
+      "id": "solana_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:45:20.991Z",
+      "last_success_at": "2026-10-13T09:45:20.991Z",
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    }
+  ],
+  "rpc_role_note": "Solana RPC为WSOL账户读取验证，confirmed slot不是成交/流动性证明；价格、流动性和滚动笔数来自DexScreener。BSC RPC仅链/区块/只读合约能力检查，未用于SOL报价；官方免费BSC事件日志标记UNSUPPORTED。",
+  "research": {
+    "status": "INSUFFICIENT_SAMPLE",
+    "total_records": 0,
+    "min_sample_size": 30,
+    "window_status_counts": {
+      "1h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      },
+      "2h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      },
+      "6h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      }
+    },
+    "case_record_count": 0,
+    "note": "无自然正式确认记录时不构造信号、不回填旧事件、不生成虚构收益。此处为捕获时点计数，不等同最终Canary统计。"
+  },
+  "references": {
+    "source_request_template": "https://api.dexscreener.com/tokens/v1/solana/{tokenAddresses}",
+    "public_pair_api": "https://api.dexscreener.com/latest/dex/pairs/solana/Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "public_pair_page": "https://dexscreener.com/solana/Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "mint_explorer": "https://solscan.io/token/So11111111111111111111111111111111111111112",
+    "solana_rpc": "https://api.mainnet.solana.com"
+  },
+  "independent_public_crosscheck": {
+    "checked_at_utc": "2026-10-13T09:45:32.7594606Z",
+    "http_status": 200,
+    "chain": "solana",
+    "token_address": "So11111111111111111111111111111111111111112",
+    "pool_address": "Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE",
+    "price_usd": 107.2,
+    "liquidity_usd": 27866153.97,
+    "note": "另一次公开单池请求，时间与本地采样不同；未拿此值替换本地历史。"
+  },
+  "acceptance_boundary": {
+    "natural_market_data": true,
+    "thresholds_modified": false,
+    "new_confirmation_manufactured": false,
+    "telegram_delivery": "PENDING",
+    "six_hour_soak": "PENDING",
+    "return_claim": "NONE"
+  }
+}

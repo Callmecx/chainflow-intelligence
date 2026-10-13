@@ -80,7 +80,7 @@ impl Http {
             client: Client::builder()
                 .connect_timeout(Duration::from_secs(5))
                 .timeout(Duration::from_secs(10))
-                .user_agent("ChainFlow-Intelligence/0.1 (read-only public research)")
+                .user_agent("ChainFlow-Intelligence/1.1 (read-only public research)")
                 .build()?,
             gates: std::array::from_fn(|_| Mutex::new(())),
             limiter: Mutex::new(Limiter::default()),
@@ -175,8 +175,8 @@ impl Http {
                 Ok(response) => {
                     let status = response.status();
                     if !status.is_success() {
-                        let retry = status == StatusCode::TOO_MANY_REQUESTS
-                            || status == StatusCode::SERVICE_UNAVAILABLE;
+                        let retry =
+                            status == StatusCode::TOO_MANY_REQUESTS || status.is_server_error();
                         let delay = retry_after(
                             response
                                 .headers()
