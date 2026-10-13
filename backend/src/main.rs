@@ -2,6 +2,7 @@ use chainflow::{
     api::{self, AppState},
     config::Rules,
     models::*,
+    notifications::{self, TelegramTransport, Transport},
     providers::{FixtureProvider, Provider, ProviderHub},
     storage::Store,
 };
@@ -22,8 +23,9 @@ enum Command {
     ScanOnce {
         #[arg(long)]
         output: PathBuf,
-        #[arg(long, default_value = "data/chainflow.sqlite")]
-        db: String,
+        /// A NEW isolated public database; existing local history is never exported.
+        #[arg(long)]
+        db: Option<String>,
         #[arg(long)]
         fixture: Option<PathBuf>,
     },
@@ -56,12 +58,15 @@ enum Command {
 }
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let log_level = std::env::var("RUST_LOG")
+        .ok()
+        .filter(|v| matches!(v.as_str(), "error" | "warn" | "info" | "debug" | "trace"))
+        .unwrap_or_else(|| "info".into());
     tracing_subscriber::fmt()
         .json()
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive(tracing::Level::INFO.into()),
-        )
+        .with_env_filter(tracing_subscriber::EnvFilter::new(format!(
+            "chainflow={log_level},reqwest=off,hyper=off,h2=off"
+        )))
         .with_writer(std::io::stderr)
         .init();
     let cli = Cli::parse();
@@ -72,6 +77,17 @@ async fn main() -> anyhow::Result<()> {
             db,
             fixture,
         } => {
+            let db = db.unwrap_or_else(|| {
+                std::env::temp_dir()
+                    .join(format!(
+                        "chainflow-public-{}-{}.sqlite",
+                        std::process::id(),
+                        chrono::Utc::now().timestamp_nanos_opt().unwrap_or_default()
+                    ))
+                    .to_string_lossy()
+                    .to_string()
+            });
+            anyhow::ensure!(!std::path::Path::new(&db).exists(),"scan-once requires a new isolated database; refusing to export existing local history/watchlist");
             let store = Store::open(&db)?;
             let (result, mode) = if let Some(path) = fixture {
                 let provider = FixtureProvider::from_json(&std::fs::read_to_string(path)?)?;
@@ -122,7 +138,53 @@ async fn main() -> anyhow::Result<()> {
                 "minimum scan interval is 60 seconds"
             );
             let store = Store::open(&db)?;
-            let state = Arc::new(AppState::new(store, ProviderHub::new()?, rules));
+            let (configured, _) = notifications::environment_status();
+            let transport = match TelegramTransport::from_env() {
+                Ok(t) => t,
+                Err(_) => {
+                    tracing::warn!(
+                        event = "telegram_configuration_invalid",
+                        detail = "credentials redacted; monitoring remains active"
+                    );
+                    None
+                }
+            };
+            let enabled = transport.is_some();
+            store.configure_notifications(enabled).await?;
+            let mut app_state = AppState::new(store, ProviderHub::new()?, rules);
+            app_state.telegram_configured = configured;
+            app_state.telegram_enabled = enabled;
+            let state = Arc::new(app_state);
+            let notification_store = state.store.clone();
+            let notification_task = transport.map(|transport| {
+                tokio::spawn(async move {
+                    let mut ticks = tokio::time::interval(std::time::Duration::from_secs(5));
+                    ticks.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
+                    loop {
+                        ticks.tick().await;
+                        match notification_store.claim_notification().await {
+                            Ok(Some(job)) => {
+                                let result = transport.send(&job).await;
+                                if notification_store
+                                    .finish_notification(job, result)
+                                    .await
+                                    .is_err()
+                                {
+                                    tracing::error!(
+                                        event = "notification_state_write_failed",
+                                        detail = "delivery may be uncertain; recover on restart"
+                                    );
+                                }
+                            }
+                            Ok(None) => {}
+                            Err(_) => tracing::error!(
+                                event = "notification_queue_failed",
+                                detail = "database operation failed; no credentials logged"
+                            ),
+                        }
+                    }
+                })
+            });
             let worker = state.clone();
             let archive_dir = PathBuf::from(&db)
                 .parent()
@@ -163,6 +225,9 @@ async fn main() -> anyhow::Result<()> {
                 })
                 .await;
             task.abort();
+            if let Some(task) = notification_task {
+                task.abort();
+            }
             result?;
         }
         Command::Doctor { db } => println!(

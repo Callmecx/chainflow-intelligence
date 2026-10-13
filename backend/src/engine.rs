@@ -1,4 +1,4 @@
-use crate::{config::Rules, models::*};
+use crate::{config::Rules, models::*, structures};
 use chrono::{DateTime, Utc};
 use serde_json::{json, Map, Value};
 
@@ -29,6 +29,19 @@ fn signal(
         state: state.into(),
         message: message.into(),
         evidence,
+        category: match severity {
+            "RISK" => "MARKET_RISK",
+            "CONFIRMATION" => "CONFIRMATION",
+            "DATA_FAULT" => "DATA_FAULT",
+            _ => "OBSERVATION",
+        }
+        .into(),
+        rule_version: structures::RULE_VERSION.into(),
+        source_at: t.fetched_at.clone(),
+        baseline_price_usd: t.price_usd,
+        baseline_liquidity_usd: t.liquidity_usd,
+        factors: json!([]),
+        evidence_snapshot: serde_json::to_value(t).unwrap_or(Value::Null),
     }
 }
 fn enough(points: &[Point], seconds: i64, max_gap: i64) -> bool {
@@ -42,7 +55,9 @@ fn enough(points: &[Point], seconds: i64, max_gap: i64) -> bool {
             let gap = (w[1] - w[0]).num_seconds();
             gap > 0 && gap <= max_gap
         })
-        && points.iter().all(|p| p.price_usd.is_some_and(|v| v > 0.0))
+        && points
+            .iter()
+            .all(|p| p.price_usd.is_some_and(|v| v.is_finite() && v > 0.0))
 }
 pub fn outcome(history: &[Point], max_gap: i64) -> Value {
     let mut windows = Map::new();
@@ -100,8 +115,10 @@ pub fn evaluate(
     let mut evidence = Vec::new();
     let mut incomplete = vec!["HONEYPOT / TOP10 / SMART_MONEY = UNKNOWN；未独立验证".into()];
     let mut emitted = Vec::new();
-    let fresh = timestamp(&t.fetched_at)
-        .is_some_and(|at| (clock - at).num_seconds().abs() <= rules.max_sample_gap_seconds);
+    let fresh = timestamp(&t.fetched_at).is_some_and(|at| {
+        at <= clock + chrono::Duration::seconds(5)
+            && (clock - at).num_seconds() <= rules.max_sample_gap_seconds
+    });
     if !fresh {
         incomplete.push("STALE：数据过期，不升级状态".into());
     }
@@ -126,12 +143,27 @@ pub fn evaluate(
     let recent: Vec<_> = history
         .iter()
         .filter(|p| {
-            timestamp(&p.at)
-                .is_some_and(|at| (clock - at).num_seconds() <= rules.max_sample_gap_seconds + 300)
+            timestamp(&p.at).is_some_and(|at| {
+                at <= clock
+                    && timestamp(&t.fetched_at).is_some_and(|end| at <= end)
+                    && (clock - at).num_seconds() <= rules.max_sample_gap_seconds + 300
+            })
         })
         .cloned()
         .collect();
-    let sufficient = enough(&recent, 300, rules.max_sample_gap_seconds);
+    let same_source_previous = previous.is_some_and(|p| {
+        !t.source.is_empty()
+            && p.token.source == t.source
+            && timestamp(&t.fetched_at)
+                .zip(timestamp(&p.token.fetched_at))
+                .is_some_and(|(now, before)| {
+                    let gap = (now - before).num_seconds();
+                    gap > 0 && gap <= rules.max_sample_gap_seconds
+                })
+    });
+    let sufficient = !t.source.is_empty()
+        && enough(&recent, 300, rules.max_sample_gap_seconds)
+        && recent.iter().all(|p| p.source == t.source);
     for (label, secs) in [("5m", 300), ("15m", 900), ("1h", 3600)] {
         if !enough(&history, secs, rules.max_sample_gap_seconds) {
             incomplete.push(format!("{label}结构：真实连续采样不足"));
@@ -144,7 +176,7 @@ pub fn evaluate(
                 .zip(timestamp(&prev.token.fetched_at))
                 .map(|(a, b)| (a - b).num_seconds())
                 .unwrap_or(i64::MAX);
-            if gap > 0 && gap <= rules.max_sample_gap_seconds {
+            if gap > 0 && gap <= rules.max_sample_gap_seconds && prev.token.source == t.source {
                 if let Some(pct) = change(prev.token.liquidity_usd, t.liquidity_usd)
                     .filter(|pct| *pct <= -rules.liquidity_drop_pct)
                 {
@@ -171,6 +203,21 @@ pub fn evaluate(
                         vec![format!("price_change={pct:.2}%; interval={gap}s")],
                     ));
                 }
+                if let Some(pct) = change(prev.token.price_usd, t.price_usd)
+                    .filter(|pct| *pct > 0.0 && *pct >= rules.drawdown_pct)
+                {
+                    emitted.push(signal(
+                        &t,
+                        "PRICE_JUMP_UP",
+                        "RISK",
+                        &state,
+                        "相邻真实样本价格向上跳变，需复核报价与市场波动，暂停确认升级",
+                        vec![format!(
+                            "price_change={pct:.2}%; interval={gap}s; threshold={}%; source={}",
+                            rules.drawdown_pct, t.source
+                        )],
+                    ));
+                }
                 if prev
                     .token
                     .volume_24h_usd
@@ -178,12 +225,11 @@ pub fn evaluate(
                     .is_some_and(|(a, b)| a > 0.0 && b > a * 1.5)
                     && change(prev.token.price_usd, t.price_usd).is_some_and(|v| v < -5.0)
                 {
-                    risk = true;
                     emitted.push(signal(
                         &t,
                         "VOLUME_PRICE_DIVERGENCE",
                         "RISK",
-                        "INVALIDATED",
+                        &state,
                         "滚动24h成交量上升伴随价格回落（非独立短时成交量）",
                         vec![format!(
                             "rolling_volume_24h={:?} -> {:?}",
@@ -195,15 +241,53 @@ pub fn evaluate(
                 incomplete.push("相邻采样间隔过大，未推断短时变化".into());
             }
         }
+        // A strict five-minute sample window: insufficient polling resolution is
+        // UNKNOWN, never filled with invented intermediate prices.
+        let decline: Vec<_> = history
+            .iter()
+            .filter(|p| {
+                timestamp(&p.at)
+                    .zip(timestamp(&t.fetched_at))
+                    .is_some_and(|(at, end)| at <= end && (end - at).num_seconds() <= 300)
+            })
+            .cloned()
+            .collect();
+        if !t.source.is_empty()
+            && enough(&decline, 0, rules.max_sample_gap_seconds)
+            && decline.iter().all(|p| p.source == t.source)
+            && decline.last().is_some_and(|p| {
+                timestamp(&p.at) == timestamp(&t.fetched_at) && p.price_usd == t.price_usd
+            })
+            && decline.windows(2).all(|w| w[1].price_usd < w[0].price_usd)
+        {
+            if let Some(pct) =
+                change(decline[0].price_usd, t.price_usd).filter(|pct| *pct <= -rules.drawdown_pct)
+            {
+                risk = true;
+                emitted.push(signal(
+                    &t,
+                    "CONTINUOUS_DRAWDOWN",
+                    "RISK",
+                    "INVALIDATED",
+                    "近5分钟同源连续采样逐次下降，累计回撤达到阈值",
+                    vec![format!(
+                        "sample_count={}; from={}; to={}; cumulative_change={pct:.2}%; source={}",
+                        decline.len(),
+                        decline[0].at,
+                        t.fetched_at,
+                        t.source
+                    )],
+                ));
+            }
+        }
         if let (Some(buys), Some(sells)) = (t.buys_5m, t.sells_5m) {
             let total = buys.saturating_add(sells);
             if total >= 20 && sells as f64 / total as f64 >= 0.85 {
-                risk = true;
                 emitted.push(signal(
                     &t,
                     "SELL_COUNT_IMBALANCE",
                     "RISK",
-                    "INVALIDATED",
+                    &state,
                     "卖出笔数占比偏高，笔数不代表净资金流",
                     vec![format!("5m buys={buys}, sells={sells}")],
                 ));
@@ -221,6 +305,57 @@ pub fn evaluate(
         ));
     }
     let old_state = state.clone();
+    let mut structure = structures::analyze(&t, &history, rules, clock);
+    // Carry a reference only across adjacent, same-source observations. Evaluate
+    // its failure before confirmation, even if market-cap eligibility is lost.
+    let reference = previous
+        .filter(|_| fresh && same_source_previous)
+        .and_then(|prev| {
+            let r = &prev.structure["breakout_reference"];
+            let valid = r["source"].as_str() == Some(t.source.as_str())
+                && r["ceiling"]
+                    .as_f64()
+                    .is_some_and(|v| v.is_finite() && v > 0.0)
+                && r["at"].as_str().and_then(timestamp).is_some_and(|at| {
+                    timestamp(&t.fetched_at)
+                        .is_some_and(|end| at < end && (end - at).num_seconds() <= 1800)
+                });
+            valid.then(|| r.clone())
+        });
+    if let Some(r) = &reference {
+        structure["breakout_reference"] = r.clone();
+        if r["ceiling"]
+            .as_f64()
+            .zip(t.price_usd)
+            .is_some_and(|(ceiling, price)| {
+                price.is_finite() && price > 0.0 && price < ceiling * 0.97
+            })
+        {
+            risk = true;
+            emitted.push(signal(
+                &t,
+                "FALSE_BREAKOUT",
+                "RISK",
+                "INVALIDATED",
+                "突破后跌回已记录平台下方",
+                vec![format!(
+                    "ceiling={}; price={:?}; breakout_at={}; source={}",
+                    r["ceiling"], t.price_usd, r["at"], t.source
+                )],
+            ));
+            structure["breakout_reference"] = Value::Null;
+        }
+    }
+    let has_market_risk = emitted.iter().any(|s| s.severity == "RISK");
+    let last_risk = previous
+        .and_then(|p| p.timeline.iter().rev().find(|s| s.severity == "RISK"))
+        .and_then(|s| timestamp(&s.at));
+    let can_recover = state == "INVALIDATED"
+        && fresh
+        && !has_market_risk
+        && sufficient
+        && eligible
+        && last_risk.is_some_and(|at| (clock - at).num_seconds() >= rules.recovery_seconds);
     if risk {
         state = "INVALIDATED".into();
         label = "RISK".into();
@@ -229,16 +364,25 @@ pub fn evaluate(
         state = "EXPIRED".into();
         label = "EXPIRED".into();
         why.push("观察TTL已到，仍保留行情采样及结果研究".into());
+    } else if can_recover {
+        state = "WATCH".into();
+        label = "RECOVERY_WATCH".into();
+        why.push("风险冷却后恢复观察；需重新经过候选与确认，保留先前失效记录".into());
     } else if state == "INVALIDATED" {
         label = "RISK".into();
         why.push("先前风险已使本轮观察失效，不自动重新确认".into());
-    } else if fresh && t.price_usd.is_some_and(|price| price > 0.0) && previous.is_some() {
+    } else if fresh
+        && !has_market_risk
+        && t.price_usd.is_some_and(|price| price > 0.0)
+        && previous.is_some()
+    {
         if eligible {
             let delta = recent
                 .first()
                 .and_then(|p| change(p.price_usd, t.price_usd));
             why.push("满足配置的新池年龄、市值、流动性观察条件".into());
             if sufficient
+                && same_source_previous
                 && age >= rules.confirmation_delay_seconds
                 && delta.is_some_and(|v| v >= 5.0)
             {
@@ -280,8 +424,124 @@ pub fn evaluate(
     } else {
         why.push("等待后续有效真实采样；没有可用价格时不升级状态".into());
     }
+    // Independent prospective schemes. A score alone never confirms a signal.
+    if fresh
+        && eligible
+        && !has_market_risk
+        && same_source_previous
+        && !can_recover
+        && old_state != "INVALIDATED"
+        && age >= rules.confirmation_delay_seconds
+        && age < rules.observation_ttl_seconds
+    {
+        if structure["multi_period"] == true {
+            emitted.push(signal(
+                &t,
+                "MULTI_PERIOD_5M_15M",
+                "CONFIRMATION",
+                "CONFIRMED",
+                "5m/15m同源采样低点同步抬高",
+                vec![format!(
+                    "5m={}; 15m={}",
+                    structure["windows"]["5m"], structure["windows"]["15m"]
+                )],
+            ));
+        }
+        // An existing retest must take precedence over another breakout reading;
+        // otherwise a strong reclaim resets retested_at and can never confirm.
+        if let Some(reference) = &reference {
+            let ceiling = reference["ceiling"].as_f64().unwrap();
+            if let Some(price) = t.price_usd.filter(|v| v.is_finite() && *v > 0.0) {
+                if reference["retested_at"].is_null() && (0.98..=1.02).contains(&(price / ceiling))
+                {
+                    structure["breakout_reference"]["retested_at"] = json!(t.fetched_at);
+                    emitted.push(signal(
+                        &t,
+                        "PLATFORM_RETEST",
+                        "WATCH",
+                        &state,
+                        "价格回到先前突破平台附近，尚未确认站稳",
+                        vec![format!(
+                            "ceiling={ceiling}; price={price}; source={}",
+                            t.source
+                        )],
+                    ));
+                } else if reference["retested_at"]
+                    .as_str()
+                    .and_then(timestamp)
+                    .is_some_and(|at| {
+                        timestamp(&t.fetched_at).is_some_and(|last| {
+                            last > at && (last - at).num_seconds() <= rules.max_sample_gap_seconds
+                        })
+                    })
+                    && price > ceiling * (1.0 + rules.breakout_buffer_pct / 100.0)
+                    && sufficient
+                {
+                    emitted.push(signal(
+                        &t,
+                        "RETEST_RECLAIM",
+                        "CONFIRMATION",
+                        "CONFIRMED",
+                        "已记录回踩后，后续有效采样重新站上平台",
+                        vec![format!(
+                            "ceiling={ceiling}; price={price}; retested_at={}; source={}",
+                            reference["retested_at"], t.source
+                        )],
+                    ));
+                    state = "CONFIRMED".into();
+                    label = "MOMENTUM_WATCH".into();
+                    structure["breakout_reference"] = Value::Null;
+                }
+            }
+        } else if structure["breakout"] == true {
+            emitted.push(signal(
+                &t,
+                "PLATFORM_BREAKOUT",
+                "WATCH",
+                &state,
+                "采样价格越过先前压缩平台，等待回踩或后续确认",
+                vec![format!(
+                    "platform_high={}; buffer_pct={}",
+                    structure["platform_high"], rules.breakout_buffer_pct
+                )],
+            ));
+            structure["breakout_reference"] = json!({"at":t.fetched_at,"source":t.source,"ceiling":structure["platform_high"],"retested_at":null});
+        }
+        if structure["activity_recovery"] == true {
+            emitted.push(signal(
+                &t,
+                "ACTIVITY_REVIVAL",
+                "WATCH",
+                &state,
+                "低活跃后连续样本买卖笔数恢复，非资金吸筹判断",
+                vec![structure["windows"]["5m"].to_string()],
+            ));
+        }
+    }
+    if emitted.iter().any(|s| s.rule == "MULTI_PERIOD_5M_15M") && state != "INVALIDATED" {
+        state = "CONFIRMED".into();
+        label = "MOMENTUM_WATCH".into();
+    }
+    // Final state is resolved before emitting transitions or persisting any
+    // prospective confirmation. Risks never coexist with a new confirmation.
+    if emitted.iter().any(|s| s.severity == "RISK") {
+        emitted.retain(|s| s.severity != "CONFIRMATION");
+    }
     if state != old_state {
         emitted.push(signal(&t,&format!("STATE_{state}"),if state=="CONFIRMED" {"CONFIRMATION"} else {"WATCH"},&state,"规则观察状态变化，不构成投资建议",vec![format!("{old_state} -> {state}; observation_age={age}s; eligible={eligible}; sufficient_samples={sufficient}")]));
+    }
+    for event in &mut emitted {
+        event.at = clock.to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+        event.factors = structure["factors"].clone();
+        event.rule_version = format!(
+            "{}-{:x}",
+            structures::RULE_VERSION,
+            serde_json::to_vec(rules)
+                .unwrap_or_default()
+                .iter()
+                .fold(14695981039346656037u64, |hash, b| (hash ^ u64::from(*b))
+                    .wrapping_mul(1099511628211))
+        );
     }
     evidence.push(format!(
         "source={}; fetched_at={}; pool={}",
@@ -327,6 +587,7 @@ pub fn evaluate(
             history,
             timeline,
             outcome: result,
+            structure,
         },
         emitted,
     )
@@ -338,6 +599,7 @@ mod tests {
     fn token(at: DateTime<Utc>, price: f64, liq: f64) -> TokenSnapshot {
         TokenSnapshot {
             chain: "solana".into(),
+            source: "fixture".into(),
             token_address: "So11111111111111111111111111111111111111112".into(),
             pool_address: "pool".into(),
             fetched_at: at.to_rfc3339(),
@@ -376,6 +638,8 @@ mod tests {
                 price_usd: Some(1.0 + i as f64 * 0.03),
                 liquidity_usd: Some(10000.0),
                 volume_24h_usd: None,
+                source: "fixture".into(),
+                ..Default::default()
             })
             .collect();
         let early = start + chrono::Duration::seconds(240);
@@ -390,7 +654,7 @@ mod tests {
         let at = start + chrono::Duration::seconds(360);
         let (candidate, _) = evaluate(
             token(at, 1.09, 10000.0),
-            Some(&prior),
+            Some(&view),
             history.clone(),
             &rules,
             at,
@@ -403,6 +667,8 @@ mod tests {
             price_usd: Some(1.12),
             liquidity_usd: Some(10000.0),
             volume_24h_usd: None,
+            source: "fixture".into(),
+            ..Default::default()
         });
         let (confirmed, events) = evaluate(
             token(later, 1.12, 10000.0),
@@ -465,6 +731,8 @@ mod tests {
                 price_usd: Some(1.0 + i as f64 / 100.0),
                 liquidity_usd: None,
                 volume_24h_usd: None,
+                source: "fixture".into(),
+                ..Default::default()
             })
             .collect();
         assert_eq!(
@@ -497,5 +765,204 @@ mod tests {
             clock + chrono::Duration::seconds(7201),
         );
         assert_eq!(expired.state, "EXPIRED");
+    }
+
+    fn sample_history(start: DateTime<Utc>, step: i64, prices: &[f64]) -> Vec<Point> {
+        prices
+            .iter()
+            .enumerate()
+            .map(|(i, price)| Point {
+                at: (start + chrono::Duration::seconds(i as i64 * step)).to_rfc3339(),
+                price_usd: Some(*price),
+                liquidity_usd: Some(10000.0),
+                source: "fixture".into(),
+                ..Default::default()
+            })
+            .collect()
+    }
+    fn prior_view(start: DateTime<Utc>, at: DateTime<Utc>, price: f64) -> TokenView {
+        let (mut view, _) = evaluate(
+            token(at, price, 10000.0),
+            None,
+            vec![],
+            &Rules::default(),
+            at,
+        );
+        view.first_seen_at = start.to_rfc3339();
+        view.state = "WATCH".into();
+        view
+    }
+
+    #[test]
+    fn breakout_retest_and_reclaim_survive_a_second_breakout_reading() {
+        let start = timestamp("2026-10-13T00:00:00Z").unwrap();
+        let rules = Rules::default();
+        let at = start + chrono::Duration::seconds(960);
+        let prices = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.03, 1.0, 1.06];
+        let prior = prior_view(start, at - chrono::Duration::seconds(120), 1.0);
+        let (breakout, events) = evaluate(
+            token(at, 1.03, 10000.0),
+            Some(&prior),
+            sample_history(start, 120, &prices[..9]),
+            &rules,
+            at,
+        );
+        assert!(events.iter().any(|s| s.rule == "PLATFORM_BREAKOUT"));
+        assert_eq!(
+            breakout.structure["breakout_reference"]["source"],
+            "fixture"
+        );
+        let at = at + chrono::Duration::seconds(120);
+        let (retest, events) = evaluate(
+            token(at, 1.0, 10000.0),
+            Some(&breakout),
+            sample_history(start, 120, &prices[..10]),
+            &rules,
+            at,
+        );
+        assert!(events.iter().any(|s| s.rule == "PLATFORM_RETEST"));
+        assert_eq!(
+            retest.structure["breakout_reference"]["at"],
+            breakout.token.fetched_at
+        );
+        let at = at + chrono::Duration::seconds(120);
+        let (reclaim, events) = evaluate(
+            token(at, 1.06, 10000.0),
+            Some(&retest),
+            sample_history(start, 120, &prices),
+            &rules,
+            at,
+        );
+        assert_eq!(reclaim.structure["breakout"], true);
+        assert_eq!(reclaim.state, "CONFIRMED");
+        assert!(events.iter().any(|s| s.rule == "RETEST_RECLAIM"));
+        assert!(!events.iter().any(|s| s.rule == "PLATFORM_BREAKOUT"));
+        assert!(reclaim.structure["breakout_reference"].is_null());
+    }
+
+    #[test]
+    fn false_breakout_takes_priority_over_same_cycle_momentum_confirmation() {
+        let start = timestamp("2026-10-13T00:00:00Z").unwrap();
+        let at = start + chrono::Duration::seconds(600);
+        let mut prior = prior_view(start, at - chrono::Duration::seconds(120), 0.94);
+        prior.state = "CONFIRMATION_CANDIDATE".into();
+        prior.structure = json!({"breakout_reference":{"source":"fixture","at":(at-chrono::Duration::seconds(240)).to_rfc3339(),"ceiling":1.0,"retested_at":null}});
+        let history = sample_history(start, 120, &[0.80, 0.82, 0.84, 0.86, 0.94, 0.96]);
+        let (view, events) = evaluate(
+            token(at, 0.96, 10000.0),
+            Some(&prior),
+            history,
+            &Rules::default(),
+            at,
+        );
+        assert_eq!(view.state, "INVALIDATED");
+        assert!(events.iter().any(|s| s.rule == "FALSE_BREAKOUT"));
+        assert!(events.iter().any(|s| s.rule == "STATE_INVALIDATED"));
+        assert!(!events
+            .iter()
+            .any(|s| s.severity == "CONFIRMATION" || s.rule == "STATE_CONFIRMED"));
+        assert!(view.structure["breakout_reference"].is_null());
+        // Loss of eligibility cannot hide failure of an already observed structure.
+        let mut missing_cap = token(at, 0.96, 10000.0);
+        missing_cap.market_cap_usd = None;
+        let (_, events) = evaluate(missing_cap, Some(&prior), vec![], &Rules::default(), at);
+        assert!(events.iter().any(|s| s.rule == "FALSE_BREAKOUT"));
+    }
+
+    #[test]
+    fn source_switch_cannot_confirm_or_reuse_a_breakout_reference() {
+        let start = timestamp("2026-10-13T00:00:00Z").unwrap();
+        let at = start + chrono::Duration::seconds(600);
+        let mut prior = prior_view(start, at - chrono::Duration::seconds(120), 1.0);
+        prior.state = "CONFIRMATION_CANDIDATE".into();
+        prior.structure = json!({"breakout_reference":{"source":"other","at":(at-chrono::Duration::seconds(240)).to_rfc3339(),"ceiling":1.0,"retested_at":prior.token.fetched_at}});
+        let prices = [1.0, 1.01, 1.02, 1.03, 1.04, 1.08];
+        let mut history = sample_history(start, 120, &prices);
+        history[2].source = "other".into();
+        let (view, events) = evaluate(
+            token(at, 1.08, 10000.0),
+            Some(&prior),
+            history,
+            &Rules::default(),
+            at,
+        );
+        assert_ne!(view.state, "CONFIRMED");
+        assert!(!events.iter().any(|s| s.severity == "CONFIRMATION"));
+        assert!(view.structure["breakout_reference"].is_null());
+        prior.token.source = "other".into();
+        let (_, events) = evaluate(
+            token(at, 1.08, 10000.0),
+            Some(&prior),
+            sample_history(start, 120, &prices),
+            &Rules::default(),
+            at,
+        );
+        assert!(!events.iter().any(|s| s.severity == "CONFIRMATION"));
+    }
+
+    #[test]
+    fn upward_jump_is_risk_and_never_a_new_confirmation() {
+        let start = timestamp("2026-10-13T00:00:00Z").unwrap();
+        let at = start + chrono::Duration::seconds(600);
+        let mut prior = prior_view(start, at - chrono::Duration::seconds(120), 1.04);
+        prior.state = "CONFIRMATION_CANDIDATE".into();
+        let (view, events) = evaluate(
+            token(at, 1.5, 10000.0),
+            Some(&prior),
+            sample_history(start, 120, &[1.0, 1.01, 1.02, 1.03, 1.04, 1.5]),
+            &Rules::default(),
+            at,
+        );
+        assert_ne!(view.state, "CONFIRMED");
+        assert!(events
+            .iter()
+            .any(|s| s.rule == "PRICE_JUMP_UP" && s.severity == "RISK"));
+        assert!(!events.iter().any(|s| s.severity == "CONFIRMATION"));
+        // A warning is independent of an already confirmed historical state.
+        prior.state = "CONFIRMED".into();
+        let (view, events) = evaluate(
+            token(at, 1.5, 10000.0),
+            Some(&prior),
+            vec![],
+            &Rules::default(),
+            at,
+        );
+        assert_eq!(view.state, "CONFIRMED");
+        assert!(events.iter().any(|s| s.rule == "PRICE_JUMP_UP"));
+        assert!(!events.iter().any(|s| s.severity == "CONFIRMATION"));
+    }
+
+    #[test]
+    fn continuous_drawdown_needs_four_fresh_same_source_samples() {
+        let start = timestamp("2026-10-13T00:00:00Z").unwrap();
+        let at = start + chrono::Duration::seconds(180);
+        let prior = prior_view(start, at - chrono::Duration::seconds(60), 0.84);
+        let history = sample_history(start, 60, &[1.0, 0.92, 0.84, 0.75]);
+        let (view, events) = evaluate(
+            token(at, 0.75, 10000.0),
+            Some(&prior),
+            history.clone(),
+            &Rules::default(),
+            at,
+        );
+        assert_eq!(view.state, "INVALIDATED");
+        assert!(events.iter().any(|s| s.rule == "CONTINUOUS_DRAWDOWN"));
+        assert!(!events.iter().any(|s| s.rule == "DRAWDOWN"));
+        let mut mixed = history.clone();
+        mixed[1].source = "other".into();
+        let mut future = history.clone();
+        future[3].at = (at + chrono::Duration::seconds(60)).to_rfc3339();
+        let mut upward = history.clone();
+        upward[2].price_usd = Some(0.93);
+        for incomplete in [history[..3].to_vec(), mixed, future, upward] {
+            let (_, events) = evaluate(
+                token(at, 0.75, 10000.0),
+                Some(&prior),
+                incomplete,
+                &Rules::default(),
+                at,
+            );
+            assert!(!events.iter().any(|s| s.rule == "CONTINUOUS_DRAWDOWN"));
+        }
     }
 }

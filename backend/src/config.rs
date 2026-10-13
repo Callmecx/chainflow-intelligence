@@ -13,6 +13,11 @@ pub struct Rules {
     pub liquidity_drop_pct: f64,
     pub drawdown_pct: f64,
     pub max_sample_gap_seconds: i64,
+    pub outcome_tolerance_seconds: i64,
+    pub research_min_samples: usize,
+    pub structure_weights: [f64; 4],
+    pub breakout_buffer_pct: f64,
+    pub recovery_seconds: i64,
 }
 impl Default for Rules {
     fn default() -> Self {
@@ -27,6 +32,11 @@ impl Default for Rules {
             liquidity_drop_pct: 30.0,
             drawdown_pct: 20.0,
             max_sample_gap_seconds: 300,
+            outcome_tolerance_seconds: 180,
+            research_min_samples: 30,
+            structure_weights: [30.0, 25.0, 25.0, 20.0],
+            breakout_buffer_pct: 1.0,
+            recovery_seconds: 900,
         }
     }
 }
@@ -57,6 +67,23 @@ impl Rules {
             (0.0..=100.0).contains(&rules.liquidity_drop_pct)
                 && (0.0..=100.0).contains(&rules.drawdown_pct),
             "invalid risk percentage"
+        );
+        anyhow::ensure!(
+            rules.outcome_tolerance_seconds > 0
+                && rules.outcome_tolerance_seconds <= 300
+                && rules.research_min_samples >= 5
+                && rules.recovery_seconds >= 600,
+            "invalid research/recovery thresholds"
+        );
+        anyhow::ensure!(
+            rules
+                .structure_weights
+                .iter()
+                .all(|v| v.is_finite() && *v >= 0.0)
+                && rules.structure_weights.iter().sum::<f64>() > 0.0
+                && rules.breakout_buffer_pct.is_finite()
+                && (0.1..=10.0).contains(&rules.breakout_buffer_pct),
+            "invalid score weights or breakout buffer"
         );
         Ok(rules)
     }

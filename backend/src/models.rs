@@ -93,14 +93,33 @@ pub struct SourceStatus {
     pub errors: u64,
     pub detail: String,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Point {
     pub at: String,
     pub price_usd: Option<f64>,
     pub liquidity_usd: Option<f64>,
     pub volume_24h_usd: Option<f64>,
+    #[serde(default)]
+    pub source: String,
+    #[serde(default)]
+    pub buys_5m: Option<u64>,
+    #[serde(default)]
+    pub sells_5m: Option<u64>,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+impl From<&TokenSnapshot> for Point {
+    fn from(t: &TokenSnapshot) -> Self {
+        Self {
+            at: t.fetched_at.clone(),
+            price_usd: t.price_usd,
+            liquidity_usd: t.liquidity_usd,
+            volume_24h_usd: t.volume_24h_usd,
+            source: t.source.clone(),
+            buys_5m: t.buys_5m,
+            sells_5m: t.sells_5m,
+        }
+    }
+}
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Signal {
     pub id: String,
     pub chain: String,
@@ -112,6 +131,20 @@ pub struct Signal {
     pub state: String,
     pub message: String,
     pub evidence: Vec<String>,
+    #[serde(default)]
+    pub category: String,
+    #[serde(default)]
+    pub rule_version: String,
+    #[serde(default)]
+    pub source_at: String,
+    #[serde(default)]
+    pub baseline_price_usd: Option<f64>,
+    #[serde(default)]
+    pub baseline_liquidity_usd: Option<f64>,
+    #[serde(default)]
+    pub factors: serde_json::Value,
+    #[serde(default)]
+    pub evidence_snapshot: serde_json::Value,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TokenView {
@@ -127,6 +160,8 @@ pub struct TokenView {
     pub history: Vec<Point>,
     pub timeline: Vec<Signal>,
     pub outcome: serde_json::Value,
+    #[serde(default)]
+    pub structure: serde_json::Value,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Snapshot {
@@ -138,6 +173,8 @@ pub struct Snapshot {
     pub provider_errors: Vec<String>,
     pub signals: Vec<Signal>,
     pub metrics: serde_json::Value,
+    #[serde(default)]
+    pub research: serde_json::Value,
 }
 impl Snapshot {
     pub fn empty(mode: &str) -> Self {
@@ -150,6 +187,7 @@ impl Snapshot {
             provider_errors: vec![],
             signals: vec![],
             metrics: serde_json::json!({}),
+            research: serde_json::json!({}),
         }
     }
 }
