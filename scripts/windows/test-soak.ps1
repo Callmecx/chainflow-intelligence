@@ -54,19 +54,29 @@ $rejected=$false;try{$null=Get-SoakDirectory '..\outside'}catch{$rejected=$true}
 Assert-Fixture $rejected 'Run ID path traversal rejected'
 $filtered=Copy-SoakCounts ([pscustomobject]@{SENT=1;TELEGRAM_BOT_TOKEN='FIXTURE_SECRET';PENDING=2})
 Assert-Fixture ($filtered.SENT -eq 1 -and $null -eq (Get-SoakField $filtered 'TELEGRAM_BOT_TOKEN')) 'Count allowlist omits secret-like strings'
+$emptyObjectCounts=Copy-SoakCounts ('{}' | ConvertFrom-Json)
+Assert-Fixture ($null -ne $emptyObjectCounts -and ($emptyObjectCounts | ConvertTo-Json -Compress) -eq '{}') 'Empty JSON count object survives StrictMode as an empty object'
+$emptyMapCounts=Copy-SoakCounts @{}
+Assert-Fixture ($null -ne $emptyMapCounts -and ($emptyMapCounts | ConvertTo-Json -Compress) -eq '{}') 'Empty dictionary counts remain empty rather than UNKNOWN'
 
 # Mock HTTP in this process; no live API or service is touched.
+$script:EmptyNotificationFixture=$false
 function Invoke-RestMethod {
     param([string]$Uri,[int]$TimeoutSec)
     if ($Uri.EndsWith('/health')) {
         return [pscustomobject]@{mode='LOCAL_LIVE';status='OK';database=[pscustomobject]@{integrity_check='ok';journal_mode='wal'};telegram=[pscustomobject]@{token='FIXTURE_SECRET'}}
     }
-    return [pscustomobject]@{mode='LOCAL_LIVE';generated_at_utc=[DateTime]::UtcNow.ToString('o');items=@();sources=@();metrics=[pscustomobject]@{samples=0;pools=0;runtime=[pscustomobject]@{started_at='A';pid=$null};signal_counts=[pscustomobject]@{WATCH=4;RISK=0};notification_counts=[pscustomobject]@{SENT=0;TOKEN='FIXTURE_SECRET'}}}
+    $notificationCounts=if($script:EmptyNotificationFixture){'{}' | ConvertFrom-Json}else{[pscustomobject]@{SENT=0;TOKEN='FIXTURE_SECRET'}}
+    return [pscustomobject]@{mode='LOCAL_LIVE';generated_at_utc=[DateTime]::UtcNow.ToString('o');items=@();sources=@();metrics=[pscustomobject]@{samples=0;pools=0;runtime=[pscustomobject]@{started_at='A';pid=$null};signal_counts=[pscustomobject]@{WATCH=4;RISK=0};notification_counts=$notificationCounts}}
 }
 $observed=Get-SoakObservation
 Assert-Fixture $observed.api_available 'Empty initial API payload remains a valid observation'
 Assert-Fixture (-not (($observed|ConvertTo-Json -Depth 12) -match 'FIXTURE_SECRET')) 'Raw HTTP secrets absent from observation'
 Assert-Fixture ($observed.data.fresh_pools -eq 0 -and $null -eq $observed.memory_working_set_bytes) 'Missing process metrics stay UNKNOWN'
+$script:EmptyNotificationFixture=$true
+$emptyNotificationObserved=Get-SoakObservation
+Assert-Fixture ($emptyNotificationObserved.api_available -and $emptyNotificationObserved.health -eq 'OK' -and $emptyNotificationObserved.http_errors -eq 0) 'Healthy API with an empty notification queue is not marked UNAVAILABLE'
+Assert-Fixture (($emptyNotificationObserved.notification_counts | ConvertTo-Json -Compress) -eq '{}' -and $emptyNotificationObserved.database_integrity -eq 'ok') 'Empty notification queue preserves successful database observation'
 
 # Fixtures must never replace the default real run chosen by status/stop tools.
 $run=New-SoakRun 660 'OFFLINE_FIXTURE' -NoLatest

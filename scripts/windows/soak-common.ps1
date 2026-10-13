@@ -126,7 +126,9 @@ function Get-SoakDelta($First, $Last) {
 function Copy-SoakCounts($Counts) {
     if ($null -eq $Counts) { return $null }
     $copy = [ordered]@{}
-    $keys = @(); if ($Counts -is [Collections.IDictionary]) { $keys=@($Counts.Keys) } else { $keys=@($Counts.PSObject.Properties.Name) }
+    # Enumerate properties explicitly: an empty PSCustomObject has no .Name member
+    # on its empty property collection under PowerShell StrictMode.
+    $keys = @(); if ($Counts -is [Collections.IDictionary]) { $keys=@($Counts.Keys) } else { $keys=@($Counts.PSObject.Properties | ForEach-Object { $_.Name }) }
     foreach ($key in $keys) {
         $value=Get-SoakField $Counts $key
         if ($key -cmatch '^[A-Z_]{1,40}$' -and ($value -is [int] -or $value -is [long] -or $value -is [double] -or $value -is [decimal]) -and $value -ge 0) { $copy[$key]=$value }
