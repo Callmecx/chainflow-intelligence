@@ -1,0 +1,13 @@
+{
+  "kind": "REAL_OBSERVER_FAILURE",
+  "run_id": "20261013T094412Z-98e2af",
+  "started_at_utc": "2026-10-13T09:44:12.6981602Z",
+  "ended_at_utc": "2026-10-13T09:45:02.7616763Z",
+  "status": "STOPPED",
+  "natural_canary_pass": false,
+  "cause": "PowerShell StrictMode property enumeration on empty notification_counts object",
+  "impact": "Observer misclassified successful API reads as UNAVAILABLE; Rust monitoring continued",
+  "fix": "Enumerate PSObject.Properties explicitly; 4 regression assertions added",
+  "regression_passed": 28,
+  "runtime_data_preserved": true
+}

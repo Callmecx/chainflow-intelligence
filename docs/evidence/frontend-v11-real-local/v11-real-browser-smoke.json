@@ -1,0 +1,68 @@
+{
+  "kind": "V1_1_REAL_BROWSER_SMOKE",
+  "fixture": false,
+  "started_at_utc": "2026-10-13T09:51:41.083Z",
+  "finished_at_utc": "2026-10-13T09:51:52.744Z",
+  "url": "http://127.0.0.1:5178/chainflow-intelligence/",
+  "status": "PASS",
+  "results": [
+    {
+      "surface": "desktop",
+      "mode": "LOCAL_LIVE",
+      "homepage_http": 200,
+      "payload_http": 200,
+      "generated_at_utc": "2026-10-13T09:49:52.972Z",
+      "items": 1124,
+      "research_status": "INSUFFICIENT_SAMPLE",
+      "records": 0,
+      "window_status_counts": {
+        "1h": {},
+        "2h": {},
+        "6h": {}
+      },
+      "json_export_same_record_count": true,
+      "private_export_fields": false
+    },
+    {
+      "surface": "signal_evidence",
+      "signal_id": "solana:J7dynFFks7z6UbuoFjE1WrUGWueRvqh34UZT2eGc7An:2ketLN11Cze9ZkHSCppTVC9CXUFYZRaJZWqJMcLEeUrX:DISCOVERED:2026-10-13T09:49:22.934Z",
+      "rule": "DISCOVERED",
+      "rule_version": "sampled-v1.1.0-e9f1b342308e3a3",
+      "category": "OBSERVATION",
+      "at": "2026-10-13T09:49:52.940Z",
+      "expanded": true
+    },
+    {
+      "surface": "local_health",
+      "status": "OK",
+      "database": "ok",
+      "telegram_configured": false,
+      "telegram_enabled": false,
+      "telegram_verification": "PENDING",
+      "credential_fields_present": false
+    },
+    {
+      "surface": "mobile_research",
+      "layout": {
+        "clientWidth": 412,
+        "scrollWidth": 412
+      }
+    },
+    {
+      "surface": "mobile_sources",
+      "layout": {
+        "clientWidth": 412,
+        "scrollWidth": 412
+      }
+    }
+  ],
+  "browser_errors": [],
+  "screenshots": [
+    "v11-real-desktop-home.png",
+    "v11-real-desktop-research.png",
+    "v11-real-signal-evidence.png",
+    "v11-real-desktop-health.png",
+    "v11-real-mobile-research.png",
+    "v11-real-mobile-sources.png"
+  ]
+}

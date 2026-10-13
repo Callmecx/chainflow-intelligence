@@ -1,0 +1,177 @@
+{
+    "kind":  "REAL_LOCAL_AUXILIARY_CHECK_NOT_CANARY_OR_SOAK",
+    "tested_at_utc":  "2026-10-13T09:39:34.9586995Z",
+    "live_observation":  {
+                             "first_observation_utc":  "2026-10-13T09:39:00.3663064Z",
+                             "last_observation_utc":  "2026-10-13T09:39:10.9175509Z",
+                             "actual_observation_span_seconds":  10.551,
+                             "requested_duration_seconds":  10,
+                             "duration_met":  true,
+                             "observed_connected_span_seconds":  10.551,
+                             "observations":  3,
+                             "successful_observations":  3,
+                             "http_error_observations":  0,
+                             "api_recoveries":  0,
+                             "provider_recoveries":  0,
+                             "backend_restart_transitions":  0,
+                             "observer_gaps":  [
+
+                                               ],
+                             "provider_requests_observed_delta":  0,
+                             "provider_errors_observed_delta":  0,
+                             "accepted_samples_observed_delta":  0,
+                             "comparable_counter_segments":  2,
+                             "counter_coverage_complete":  true,
+                             "unknown_counter_values":  0,
+                             "signal_counts_delta":  {
+                                                         "WATCH":  null,
+                                                         "RISK":  null,
+                                                         "CONFIRMATION":  null,
+                                                         "DATA_FAULT":  null
+                                                     },
+                             "notification_counts_final":  null,
+                             "sources_final":  [
+                                                   {
+                                                       "id":  "bsc_contract_verification",
+                                                       "status":  "OK",
+                                                       "requests":  0,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:17.853Z",
+                                                       "last_success_age_seconds":  113.065,
+                                                       "latency_ms":  null
+                                                   },
+                                                   {
+                                                       "id":  "bsc_event_logs",
+                                                       "status":  "UNSUPPORTED",
+                                                       "requests":  0,
+                                                       "errors":  0,
+                                                       "last_success_at":  null,
+                                                       "last_success_age_seconds":  null,
+                                                       "latency_ms":  null
+                                                   },
+                                                   {
+                                                       "id":  "bsc_rpc",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:17.853Z",
+                                                       "last_success_age_seconds":  113.065,
+                                                       "latency_ms":  4108
+                                                   },
+                                                   {
+                                                       "id":  "dexscreener_boosts",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:20.898Z",
+                                                       "last_success_age_seconds":  110.02,
+                                                       "latency_ms":  7141
+                                                   },
+                                                   {
+                                                       "id":  "dexscreener_market_bsc",
+                                                       "status":  "OK",
+                                                       "requests":  95,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:29.312Z",
+                                                       "last_success_age_seconds":  101.606,
+                                                       "latency_ms":  1998
+                                                   },
+                                                   {
+                                                       "id":  "dexscreener_market_solana",
+                                                       "status":  "OK",
+                                                       "requests":  68,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:23.295Z",
+                                                       "last_success_age_seconds":  107.623,
+                                                       "latency_ms":  1900
+                                                   },
+                                                   {
+                                                       "id":  "dexscreener_profiles",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:13.756Z",
+                                                       "last_success_age_seconds":  117.162,
+                                                       "latency_ms":  445
+                                                   },
+                                                   {
+                                                       "id":  "geckoterminal_bsc_new_pools",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:33.701Z",
+                                                       "last_success_age_seconds":  97.217,
+                                                       "latency_ms":  10155
+                                                   },
+                                                   {
+                                                       "id":  "geckoterminal_bsc_trending_pools",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:44.202Z",
+                                                       "last_success_age_seconds":  86.716,
+                                                       "latency_ms":  10499
+                                                   },
+                                                   {
+                                                       "id":  "geckoterminal_solana_new_pools",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:13.557Z",
+                                                       "last_success_age_seconds":  117.361,
+                                                       "latency_ms":  246
+                                                   },
+                                                   {
+                                                       "id":  "geckoterminal_solana_trending_pools",
+                                                       "status":  "OK",
+                                                       "requests":  32,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:23.543Z",
+                                                       "last_success_age_seconds":  107.375,
+                                                       "latency_ms":  9979
+                                                   },
+                                                   {
+                                                       "id":  "solana_mint_verification",
+                                                       "status":  "OK",
+                                                       "requests":  0,
+                                                       "errors":  0,
+                                                       "last_success_at":  "2026-10-13T09:37:13.744Z",
+                                                       "last_success_age_seconds":  117.174,
+                                                       "latency_ms":  null
+                                                   },
+                                                   {
+                                                       "id":  "solana_rpc",
+                                                       "status":  "OK",
+                                                       "requests":  33,
+                                                       "errors":  1,
+                                                       "last_success_at":  "2026-10-13T09:37:13.744Z",
+                                                       "last_success_age_seconds":  117.174,
+                                                       "latency_ms":  433
+                                                   }
+                                               ],
+                             "database_integrity_final":  "ok",
+                             "data_continuity_final":  {
+                                                           "fresh_pools":  189,
+                                                           "stale_pools":  772,
+                                                           "unknown_time_pools":  0,
+                                                           "histories_with_gap":  193,
+                                                           "largest_sample_gap_seconds":  2998.558
+                                                       },
+                             "memory_min_bytes":  33873920,
+                             "memory_max_bytes":  66699264,
+                             "cpu_machine_percent_average":  1.7581,
+                             "cpu_machine_percent_max":  1.9576,
+                             "counter_note":  "Observed comparable intervals only; restarts/missing baselines are excluded, never assumed zero. WATCH is not RISK. Null means UNKNOWN."
+                         },
+    "worker_identity_verified":  true,
+    "observer_stop_status":  "STOPPED",
+    "worker_stopped":  true,
+    "existing_services_preserved":  {
+                                        "port_8787_same_listeners":  true,
+                                        "port_5178_same_listeners":  true,
+                                        "port_5173_same_listeners":  true
+                                    },
+    "natural_6h":  "PENDING",
+    "natural_24h":  "PENDING",
+    "limitation":  "Ten-second script lifecycle observation only; does not validate 15-minute Canary, six-hour soak or Telegram delivery."
+}

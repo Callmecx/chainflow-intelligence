@@ -1,0 +1,76 @@
+   Compiling chainflow v1.1.0 (D:\ChainFlow-Intelligence\backend)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.46s
+     Running unittests src\lib.rs (backend\target\debug\deps\chainflow-4820e0c3e83b6255.exe)
+
+running 62 tests
+test engine::tests::missing_price_does_not_upgrade_discovery ... ok
+test engine::tests::risk_is_immediate_and_zero_liquidity_safe ... ok
+test models::tests::address_validation_rejects_wrong_chain_and_short_mint ... ok
+test engine::tests::outcomes_require_completed_contiguous_window ... ok
+test engine::tests::upward_jump_is_risk_and_never_a_new_confirmation ... ok
+test engine::tests::false_breakout_takes_priority_over_same_cycle_momentum_confirmation ... ok
+test engine::tests::stale_cannot_upgrade_and_ttl_expires ... ok
+test engine::tests::missing_market_cap_and_insufficient_samples_never_confirm ... ok
+test engine::tests::source_switch_cannot_confirm_or_reuse_a_breakout_reference ... ok
+test engine::tests::confirmation_requires_six_minutes_and_a_second_observation ... ok
+test notifications::tests::card_has_complete_identity_unknowns_separate_valuations_and_source_link ... ok
+test engine::tests::breakout_retest_and_reclaim_survive_a_second_breakout_reading ... ok
+test engine::tests::continuous_drawdown_needs_four_fresh_same_source_samples ... ok
+test notifications::tests::provider_snapshot_mismatch_and_expired_retry_are_not_delivered ... ok
+test notifications::tests::configuration_and_public_status_never_expose_secrets ... ok
+test notifications::tests::only_fresh_confirmed_or_evidence_risk_is_enqueued ... ok
+test notifications::tests::retries_respect_cooldown_and_429_blocks_whole_queue ... ok
+test notifications::tests::disabled_or_incomplete_configuration_cannot_backfill_queue ... ok
+test notifications::tests::recent_pending_survives_restart_without_bursting ... ok
+test notifications::tests::retry_after_date_rounds_up_and_invalid_header_uses_backoff ... ok
+test notifications::tests::delivery_state_and_attempt_audit_commit_atomically ... ok
+test notifications::tests::mock_transport_worker_flow_recovers_retry_to_sent ... ok
+test notifications::tests::dedup_cooldown_and_independent_pools ... ok
+test notifications::tests::untrusted_names_do_not_enable_telegram_markup_or_break_length_budget ... ok
+test notifications::tests::bot_api_429_uses_response_retry_after_without_leaking_description ... ok
+test notifications::tests::bot_api_payload_is_free_plain_text_and_success_is_verified ... ok
+test notifications::tests::sustained_data_fault_is_not_market_risk ... ok
+test notifications::tests::risk_priority_and_persistent_global_interval ... ok
+test notifications::tests::watch_default_off_and_entity_mismatch_rejected ... ok
+test providers::http::tests::retry_after_seconds_dates_and_invalid ... ok
+test notifications::tests::timeout_is_uncertain_and_never_automatically_resent ... ok
+test notifications::tests::bot_api_403_is_permanent_and_503_retries ... ok
+test providers::http::tests::shared_limiter_carries_state_across_requests_and_buckets ... ok
+test notifications::tests::malformed_success_is_uncertain_and_header_retry_is_not_shortened ... ok
+test notifications::tests::retry_budget_permanent_failure_and_attempt_audit_are_persisted ... ok
+test providers::parsing::tests::absent_market_cap_stays_unknown_and_tiny_liquidity_stays_finite ... ok
+test providers::parsing::tests::cross_source_case_normalization_and_out_of_order_samples ... ok
+test providers::parsing::tests::reject_wrong_chain_and_nonfinite_values ... ok
+test providers::parsing::tests::recorded_public_responses_replay_without_network ... ok
+test providers::tests::fixture_replay_is_deterministic_and_explicit ... ok
+test providers::tests::invalid_lookup_never_makes_a_network_request ... ok
+test research::tests::drawdown_is_peak_to_trough_not_just_baseline_loss ... ok
+test research::tests::settled_results_do_not_rewrite_after_late_replay ... ok
+test research::tests::aggregate_preserves_missing_denominators_and_median ... ok
+test research::tests::missing_endpoint_gap_and_source_switch_not_silently_dropped ... ok
+test research::tests::future_data_never_leaks_and_horizons_are_correct ... ok
+test structures::tests::resolution_gaps_sources_and_future_are_explicit ... ok
+test providers::http::tests::long_retry_after_is_honoured_without_blocking_scan ... ok
+test providers::http::tests::cache_retains_timestamp_and_request_count ... ok
+test providers::http::tests::forbidden_is_not_retried ... ok
+test api::tests::health_validation_and_write_origin ... ok
+test storage::tests::source_failure_signals_are_cooldown_deduplicated ... ok
+test storage::tests::data_fault_counters_are_separate_and_recover_without_market_risk ... ok
+test storage::tests::pool_isolation_signal_research_and_public_boundary ... ok
+test storage::tests::archive_restore_idempotent_and_unknown_not_zero ... ok
+test storage::tests::dedup_restart_out_of_order_and_cooldown ... ok
+test storage::tests::v1_schema_migrates_with_verified_backup_and_preserves_history ... ok
+test notifications::tests::restart_recovers_inflight_as_uncertain_and_expires_history ... ok
+test storage::tests::watchlist_full_duplicate_remains_idempotent ... ok
+test notifications::tests::bot_api_timeout_is_uncertain_and_contains_no_request_url ... ok
+test providers::http::tests::service_unavailable_retries_and_recovers ... ok
+test providers::http::tests::timeout_is_counted_without_inventing_a_response ... ok
+
+test result: ok. 62 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.17s
+
+     Running unittests src\main.rs (backend\target\debug\deps\chainflow-ece8de8f52c865a6.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,228 @@
+{
+  "kind": "REAL_PUBLIC_SCAN_ACCEPTANCE",
+  "captured_at_utc": "2026-10-13T09:56:02.0000000Z",
+  "process": {
+    "started_at_utc": "2026-10-13T09:53:35.1752105Z",
+    "ended_at_utc": "2026-10-13T09:54:25.7550572Z",
+    "exit_code": 0,
+    "snapshot_created": true,
+    "duration_seconds": 50.58,
+    "database_selection": "DEFAULT_NEW_ISOLATED_TEMPORARY_DATABASE",
+    "fixture_mode": false
+  },
+  "snapshot": {
+    "mode": "PUBLIC_SNAPSHOT",
+    "generated_at_utc": "2026-10-13T09:54:25.585Z",
+    "max_staleness_seconds": 2700,
+    "pool_count": 68,
+    "chain_counts": [
+      {
+        "chain": "bsc",
+        "pool_count": 27,
+        "unique_token_count": 26
+      },
+      {
+        "chain": "solana",
+        "pool_count": 41,
+        "unique_token_count": 41
+      }
+    ],
+    "discovery_label_counts": {
+      "BASELINE": 2,
+      "BOOSTED": 9,
+      "NEW_POOL": 24,
+      "PROFILE": 9,
+      "TRENDING": 24
+    },
+    "signal_counts": {
+      "WATCH": 68
+    },
+    "sha256": "5c8f7f3a4d8c3168b4a57d38993cef138d8925e9fff64cd2da9b784916e5abc5",
+    "bytes": 933479
+  },
+  "sources": [
+    {
+      "id": "bsc_contract_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:38.829Z",
+      "last_success_at": "2026-10-13T09:53:38.829Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0
+    },
+    {
+      "id": "bsc_event_logs",
+      "status": "UNSUPPORTED",
+      "checked_at": "2026-10-13T09:53:38.829Z",
+      "last_success_at": null,
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0
+    },
+    {
+      "id": "bsc_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:38.829Z",
+      "last_success_at": "2026-10-13T09:53:38.829Z",
+      "latency_ms": 2767,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "dexscreener_boosts",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:43.214Z",
+      "last_success_at": "2026-10-13T09:53:43.214Z",
+      "latency_ms": 7477,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "dexscreener_market_bsc",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:45.968Z",
+      "last_success_at": "2026-10-13T09:53:45.968Z",
+      "latency_ms": 2279,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "dexscreener_market_solana",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:43.686Z",
+      "last_success_at": "2026-10-13T09:53:43.686Z",
+      "latency_ms": 471,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "dexscreener_profiles",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:35.736Z",
+      "last_success_at": "2026-10-13T09:53:35.736Z",
+      "latency_ms": 451,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "geckoterminal_bsc_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:54:15.482Z",
+      "last_success_at": "2026-10-13T09:54:15.482Z",
+      "latency_ms": 10118,
+      "requests": 3,
+      "errors": 2
+    },
+    {
+      "id": "geckoterminal_bsc_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:54:25.456Z",
+      "last_success_at": "2026-10-13T09:54:25.456Z",
+      "latency_ms": 9971,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "geckoterminal_solana_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:35.887Z",
+      "last_success_at": "2026-10-13T09:53:35.887Z",
+      "latency_ms": 601,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "geckoterminal_solana_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:45.809Z",
+      "last_success_at": "2026-10-13T09:53:45.809Z",
+      "latency_ms": 9920,
+      "requests": 1,
+      "errors": 0
+    },
+    {
+      "id": "solana_mint_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:36.062Z",
+      "last_success_at": "2026-10-13T09:53:36.062Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0
+    },
+    {
+      "id": "solana_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T09:53:36.062Z",
+      "last_success_at": "2026-10-13T09:53:36.062Z",
+      "latency_ms": 776,
+      "requests": 1,
+      "errors": 0
+    }
+  ],
+  "requests_total": 12,
+  "source_errors_total": 2,
+  "provider_errors": [],
+  "research": {
+    "status": "INSUFFICIENT_SAMPLE",
+    "total_records": 0,
+    "min_sample_size": 30,
+    "window_status_counts": {
+      "1h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      },
+      "2h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      },
+      "6h": {
+        "PENDING": 0,
+        "COMPLETE": 0,
+        "MISSING": 0,
+        "CENSORED": 0,
+        "NOT_INITIALIZED": 0
+      }
+    }
+  },
+  "privacy_assertions": {
+    "mode_is_public_snapshot": true,
+    "no_private_configuration_or_runtime_keys": true,
+    "no_machine_paths": true,
+    "no_credential_shapes": true,
+    "no_personal_watch_labels": true,
+    "only_single_scan_histories": true,
+    "all_first_seen_at_within_this_process": true,
+    "all_source_samples_fresh_for_export": true,
+    "existing_database_export_rejected": true,
+    "rejection_created_no_temporary_output": true
+  },
+  "privacy_violations": {
+    "field_paths": [],
+    "machine_path_field_locations": [],
+    "credential_shape_locations": [],
+    "personal_watch_labels": []
+  },
+  "existing_database_rejection": {
+    "checked_at_utc": "2026-10-13T09:54:07.4783477Z",
+    "exit_code": 1,
+    "output_created": false,
+    "temporary_output_created": false,
+    "safe_message": "scan-once requires a new isolated database; refusing to export existing local history/watchlist",
+    "expected_message_matched": true,
+    "passed": true
+  },
+  "validation": "PASS",
+  "limitations": [
+    "One independent real free-source scan; this is not a continuous-monitoring or six-hour acceptance result.",
+    "RPC source requests validate read-only connectivity/account state; they do not independently verify every pool quote.",
+    "UNSUPPORTED is a documented capability limit, not a successful full-chain event stream.",
+    "No full snapshot, personal watchlist, local database paths, process IDs, or notification credentials are included in this evidence report."
+  ],
+  "source_error_interpretation": "GeckoTerminal BSC new_pools recorded 3 attempts and 2 errors before final OK. Final provider_errors is empty; intermediate retries must not be reported as zero errors. This summary does not infer unrecorded HTTP codes."
+}
