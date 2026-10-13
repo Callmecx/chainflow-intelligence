@@ -1,0 +1,180 @@
+{
+  "kind": "REAL_ONLINE_BROWSER_SMOKE",
+  "fixture": false,
+  "started_at_utc": "2026-10-13T10:10:37.628Z",
+  "finished_at_utc": "2026-10-13T10:10:45.158Z",
+  "url": "https://callmecx.github.io/chainflow-intelligence/",
+  "status": "PASS",
+  "generated_at_utc": "2026-10-13T10:09:28.777Z",
+  "sources": [
+    {
+      "id": "bsc_contract_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:02.029Z",
+      "last_success_at": "2026-10-13T10:09:02.029Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "eth_chainId=0x38; eth_blockNumber=0x797ba6b; eth_call WBNB decimals=18; latest (not finality proof)"
+    },
+    {
+      "id": "bsc_event_logs",
+      "status": "UNSUPPORTED",
+      "checked_at": "2026-10-13T10:09:02.029Z",
+      "last_success_at": null,
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "Official public BSC endpoints document eth_getLogs disabled; continuous full-chain swaps are unsupported"
+    },
+    {
+      "id": "bsc_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:02.029Z",
+      "last_success_at": "2026-10-13T10:09:02.029Z",
+      "latency_ms": 3057,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_boosts",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:06.213Z",
+      "last_success_at": "2026-10-13T10:09:06.213Z",
+      "latency_ms": 7448,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_market_bsc",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:08.332Z",
+      "last_success_at": "2026-10-13T10:09:08.332Z",
+      "latency_ms": 2002,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_market_solana",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:06.329Z",
+      "last_success_at": "2026-10-13T10:09:06.329Z",
+      "latency_ms": 115,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "dexscreener_profiles",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:08:58.765Z",
+      "last_success_at": "2026-10-13T10:08:58.765Z",
+      "latency_ms": 72,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_bsc_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:18.803Z",
+      "last_success_at": "2026-10-13T10:09:18.803Z",
+      "latency_ms": 10068,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_bsc_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:28.767Z",
+      "last_success_at": "2026-10-13T10:09:28.767Z",
+      "latency_ms": 9963,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_solana_new_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:08:58.968Z",
+      "last_success_at": "2026-10-13T10:08:58.968Z",
+      "latency_ms": 275,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "geckoterminal_solana_trending_pools",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:09:08.733Z",
+      "last_success_at": "2026-10-13T10:09:08.733Z",
+      "latency_ms": 9765,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    },
+    {
+      "id": "solana_mint_verification",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:08:58.971Z",
+      "last_success_at": "2026-10-13T10:08:58.971Z",
+      "latency_ms": null,
+      "requests": 0,
+      "errors": 0,
+      "detail": "getAccountInfo mint=So11111111111111111111111111111111111111112; slot=456403887; commitment=confirmed; no transaction signature because this is an account read"
+    },
+    {
+      "id": "solana_rpc",
+      "status": "OK",
+      "checked_at": "2026-10-13T10:08:58.971Z",
+      "last_success_at": "2026-10-13T10:08:58.971Z",
+      "latency_ms": 278,
+      "requests": 1,
+      "errors": 0,
+      "detail": "HTTP 200; public read-only data; local cache retains original fetched_at"
+    }
+  ],
+  "results": [
+    {
+      "surface": "desktop",
+      "homepage_http": 200,
+      "data_http": 200,
+      "mode": "PUBLIC_SNAPSHOT",
+      "chains": {
+        "solana": 41,
+        "bsc": 27
+      },
+      "solana_filter_rows": 41,
+      "bsc_filter_rows": 27,
+      "token_address": "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",
+      "detail_hash": "#token/solana/2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv/ByKfqBGyHQj1hmEUouXfueLJEU1SHdJz3uMtd1yXGunS",
+      "clipboard_full_address": true,
+      "hash_refresh": true,
+      "explorer_url": "https://solscan.io/token/2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",
+      "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/trending_pools?include=base_token,quote_token,dex"
+    },
+    {
+      "surface": "mobile",
+      "homepage_layout": {
+        "scrollWidth": 412,
+        "clientWidth": 412
+      },
+      "detail_layout": {
+        "scrollWidth": 412,
+        "clientWidth": 412
+      },
+      "source_status_page": true
+    }
+  ],
+  "browser_errors": [],
+  "screenshots": [
+    "real-desktop-home.png",
+    "real-desktop-detail.png",
+    "real-mobile-home.png",
+    "real-mobile-detail.png"
+  ]
+}

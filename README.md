@@ -1,6 +1,6 @@
 # ChainFlow Intelligence
 
-**V1.1 · Rust / Web3 工程作品** · [公开看板](https://callmecx.github.io/chainflow-intelligence/) · [源码](https://github.com/Callmecx/chainflow-intelligence) · [CI](https://github.com/Callmecx/chainflow-intelligence/actions/workflows/ci.yml)
+**PORTFOLIO_READY · V1.1 · Rust / Web3 工程作品** · [公开看板](https://callmecx.github.io/chainflow-intelligence/) · [稳定版 v1.1.0](https://github.com/Callmecx/chainflow-intelligence/releases/tag/v1.1.0) · [源码](https://github.com/Callmecx/chainflow-intelligence) · [CI](https://github.com/Callmecx/chainflow-intelligence/actions/workflows/ci.yml)
 
 展示一条能真实运行的数据工程链路：**Tokio 异步采集 → 公开 RPC / 行情解析 → SQLite 单写入持久化 → 可解释监控状态机 → axum API → Vue 中文看板**。本机持续采集，GitHub Pages 提供免费公开快照。
 
@@ -8,7 +8,7 @@ V1.1 增量加入持久化 Telegram 队列、按正式信号冻结证据的 1h/2
 
 **面试阅读入口：**[3 分钟演示与简历描述](docs/PORTFOLIO_GUIDE.md) · [Rust 架构及源码索引](docs/V1_1_ARCHITECTURE.md) · [V1.1 真实验收](docs/V1_1_ACCEPTANCE.md) · [效果统计定义](docs/SIGNAL_OUTCOMES.md) · [能力边界](docs/V1_1_LIMITATIONS.md)
 
-本轮以核心可运行性、测试、短时 Canary、CI 和 Pages 为封版门槛。Telegram 实投、6h/24h 自然长跑没有证据时明确 PENDING；不因作品发布而宣称已验证。封版后停止功能扩展，不规划下一轮大型平台。
+核心封版验收已通过：62 项 Rust、31 项前端单测、42 项浏览器场景、28 项 Windows 脚本测试；真实 Canary 904.702 秒、16/16 API 观察成功，GitHub CI 与实际 Pages 桌面/手机验证通过。Telegram 实投、6h/24h 自然长跑仍为 PENDING；不因作品发布而宣称已验证。**本轮已封版，停止功能扩展，转向简历与面试展示。**
 
 ![V1.1 本地真实运行界面，2026-10-13 UTC](docs/evidence/frontend-v11-real-local/v11-real-desktop-home.png)
 

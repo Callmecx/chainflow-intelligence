@@ -1,0 +1,59 @@
+{
+  "kind": "V1_1_REAL_BROWSER_SMOKE",
+  "fixture": false,
+  "started_at_utc": "2026-10-13T10:10:37.623Z",
+  "finished_at_utc": "2026-10-13T10:10:45.652Z",
+  "url": "https://callmecx.github.io/chainflow-intelligence/",
+  "status": "PASS",
+  "results": [
+    {
+      "surface": "desktop",
+      "mode": "PUBLIC_SNAPSHOT",
+      "homepage_http": 200,
+      "payload_http": 200,
+      "generated_at_utc": "2026-10-13T10:09:28.777Z",
+      "items": 68,
+      "research_status": "INSUFFICIENT_SAMPLE",
+      "records": 0,
+      "window_status_counts": {
+        "1h": {},
+        "2h": {},
+        "6h": {}
+      },
+      "json_export_same_record_count": true,
+      "private_export_fields": false
+    },
+    {
+      "surface": "signal_evidence",
+      "signal_id": "solana:pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn:2uF4Xh61rDwxnG9woyxsVQP7zuA6kLFpb3NvnRQeoiSd:DISCOVERED:2026-10-13T10:09:08.733Z",
+      "rule": "DISCOVERED",
+      "rule_version": "sampled-v1.1.0-e9f1b342308e3a3",
+      "category": "OBSERVATION",
+      "at": "2026-10-13T10:09:28.777Z",
+      "expanded": true
+    },
+    {
+      "surface": "mobile_research",
+      "layout": {
+        "clientWidth": 412,
+        "scrollWidth": 412
+      }
+    },
+    {
+      "surface": "mobile_sources",
+      "layout": {
+        "clientWidth": 412,
+        "scrollWidth": 412
+      }
+    }
+  ],
+  "browser_errors": [],
+  "screenshots": [
+    "v11-real-desktop-home.png",
+    "v11-real-desktop-research.png",
+    "v11-real-signal-evidence.png",
+    "v11-real-desktop-health.png",
+    "v11-real-mobile-research.png",
+    "v11-real-mobile-sources.png"
+  ]
+}

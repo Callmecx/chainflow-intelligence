@@ -1,8 +1,8 @@
 {
   "kind": "V1_1_FRONTEND_ACCEPTANCE",
-  "recorded_at_utc": "2026-10-13T09:59:21.7657889Z",
+  "recorded_at_utc": "2026-10-13T10:12:42.7163118Z",
   "package_version": "1.1.0",
-  "status": "AUTOMATED_CHECKS_AND_REAL_LOCAL_SMOKE_PASS_PUBLIC_V1_1_SMOKE_PENDING",
+  "status": "PUBLIC_PASS",
   "typecheck": "PASS",
   "lint": {
     "command": "npm run lint",
@@ -100,7 +100,8 @@
     "Legacy V1 confirmation events are not treated as V1.1 formal research records.",
     "Initial smoke script exact navigation-name lookup included a decorative icon and timed out; the semantic selector was corrected, and the complete real smoke passed.",
     "Mobile screenshots start from page top so the fixed navigation does not obscure panel headings.",
-    "Six-hour natural signal outcomes and Telegram real delivery remain PENDING; the empty research export is intentional."
+    "Six-hour natural signal outcomes and Telegram real delivery remain PENDING; the empty research export is intentional.",
+    "Final Pages validation used the successful run for exact SHA cf82cfeb35fb7791a6ee977d85a2d1d3587fe806; served JS index-BmpBt9gA.js matches the validated production build. The observed public source statuses were 12 OK and one explicitly UNSUPPORTED BSC logs capability, with no provider errors."
   ],
   "source_failure_banner_fix": {
     "status": "PASS",
@@ -116,6 +117,48 @@
     "lint": "PASS",
     "build": "PASS",
     "fixture_only": true,
-    "real_local_smoke_note": "The separately timestamped real local smoke preceded this final banner fix. All affected failure paths are verified using explicit test fixtures; final deployed Pages smoke remains pending."
+    "real_local_smoke_note": "The separately timestamped real local smoke preceded this final banner fix. The final deployed Pages build containing the fix passed both real smoke suites; affected failure paths are verified using explicit test fixtures."
+  },
+  "real_public_smoke": {
+    "status": "PASS",
+    "fixture": false,
+    "deployment_sha": "cf82cfeb35fb7791a6ee977d85a2d1d3587fe806",
+    "pages_run_id": 38381310726,
+    "pages_run_url": "https://github.com/Callmecx/chainflow-intelligence/actions/runs/38381310726",
+    "pages_run_conclusion": "success",
+    "pages_run_updated_at_utc": "2026-10-13T10:10:05Z",
+    "url": "https://callmecx.github.io/chainflow-intelligence/",
+    "started_at_utc": "2026-10-13T10:10:37.623Z",
+    "finished_at_utc": "2026-10-13T10:11:37.838Z",
+    "v11_report": "docs/evidence/frontend-v11-real-pages/v11-real-browser-smoke.json",
+    "core_report": "docs/evidence/frontend-v11-pages-core/real-browser-smoke.json",
+    "privacy_report": "docs/evidence/frontend-v11-real-pages/public-boundary.json",
+    "snapshot_generated_at_utc": "2026-10-13T10:09:28.777Z",
+    "mode": "PUBLIC_SNAPSHOT",
+    "homepage_http": 200,
+    "snapshot_http": 200,
+    "items": 68,
+    "chains": {
+      "solana": 41,
+      "bsc": 27
+    },
+    "source_status_counts": {
+      "OK": 12,
+      "UNSUPPORTED": 1
+    },
+    "provider_errors": [],
+    "research_records": 0,
+    "research_status": "INSUFFICIENT_SAMPLE",
+    "clipboard_full_address": true,
+    "hash_refresh": true,
+    "mobile_scroll_width": 412,
+    "mobile_client_width": 412,
+    "local_api_requests": 0,
+    "private_top_level_or_metrics_fields": 0,
+    "browser_errors": 0,
+    "screenshots": 10,
+    "visual_review": "PASS",
+    "no_mocks_or_fixtures": true,
+    "no_product_code_changed": true
   }
 }

@@ -1,0 +1,41 @@
+{
+  "kind": "REAL_PUBLIC_NETWORK_AND_PRIVACY_BOUNDARY",
+  "fixture": false,
+  "started_at_utc": "2026-10-13T10:11:34.375Z",
+  "finished_at_utc": "2026-10-13T10:11:37.838Z",
+  "url": "https://callmecx.github.io/chainflow-intelligence/",
+  "deployment_sha": "cf82cfeb35fb7791a6ee977d85a2d1d3587fe806",
+  "pages_run_id": 38381310726,
+  "pages_run_conclusion": "success",
+  "status": "PASS",
+  "mode": "PUBLIC_SNAPSHOT",
+  "snapshot_http": 200,
+  "generated_at_utc": "2026-10-13T10:09:28.777Z",
+  "source_status_counts": {
+    "OK": 12,
+    "UNSUPPORTED": 1
+  },
+  "provider_errors": [],
+  "local_api_requests": [],
+  "private_top_level_or_metrics_fields": [],
+  "homepage_banner": "◷\n公开定时快照 · 非连续监控\n\nGitHub Actions 目标每半小时更新，调度可能延迟。浏览器收藏不触发后台监控；在线搜索仅覆盖当次快照。\n\n生成时间 2026-10-13 10:09:28 UTC · 2 分钟前 · 陈旧阈值 2700 秒\n\nPUBLIC_SNAPSHOT",
+  "browser_errors": [],
+  "browser_requests": [
+    {
+      "url": "https://callmecx.github.io/chainflow-intelligence/",
+      "method": "GET"
+    },
+    {
+      "url": "https://callmecx.github.io/chainflow-intelligence/assets/index-BmpBt9gA.js",
+      "method": "GET"
+    },
+    {
+      "url": "https://callmecx.github.io/chainflow-intelligence/assets/index-CojkyClU.css",
+      "method": "GET"
+    },
+    {
+      "url": "https://callmecx.github.io/chainflow-intelligence/snapshot.json",
+      "method": "GET"
+    }
+  ]
+}

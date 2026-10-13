@@ -1,6 +1,6 @@
 # V1.1 作品封版验收
 
-核验日期：2026-10-13。状态：**FINAL_VERIFICATION_IN_PROGRESS**。核心功能已冻结，真实 Canary、远端 CI 与公开 Pages 的最终结果逐项填入本文件；未完成的步骤不提前写成通过。
+核验日期：2026-10-13。状态：**PORTFOLIO_READY**。核心功能已冻结，自动测试、真实 Canary、远端 CI 与公开 Pages 实际浏览器验收通过。以下证据均保留实际版本和 UTC 时间；可选未完成项仍明确 PENDING。
 
 本轮按最新作品定位验收：可真实运行的 Rust / Web3 工程、中文说明、真实接口、自动测试、短 Canary、公开源码及 Pages。Telegram 实投和 6h/24h 长跑不作为稳定作品版本的硬门槛，仍单独标为 PENDING。不会在本轮后自动开启下一轮功能开发。
 
@@ -58,9 +58,15 @@ Canary 完成时研究记录已自然增至 **2**，仍为 `INSUFFICIENT_SAMPLE`
 
 ## 发布验收
 
-- [PR #1](https://github.com/Callmecx/chainflow-intelligence/pull/1) 已创建；最终 CI：PENDING。
-- Pages V1.1 最终构建及真实浏览器：PENDING；V1 线上仍是独立历史版本，不能用旧版 HTTP 200 代替新版验收。
-- 稳定 Tag：PENDING；上述核心门槛通过后发布 `v1.1.0` 并标记 PORTFOLIO_READY。
+- [PR #1](https://github.com/Callmecx/chainflow-intelligence/pull/1) 于 `2026-10-13T10:08:26Z` 正常合并，功能合并提交 `cf82cfeb35fb7791a6ee977d85a2d1d3587fe806`。
+- PR 最终代码及证据提交 `a755d27` 的 [CI 38381129463](https://github.com/Callmecx/chainflow-intelligence/actions/runs/38381129463)：**SUCCESS**。已实际核对远端日志：62 Rust、31 单测、42 E2E、28 Windows 全通过。
+- 合并提交的 [main CI 38381310811](https://github.com/Callmecx/chainflow-intelligence/actions/runs/38381310811)：**SUCCESS**。后续封版文档提交不改变上述功能源码；稳定 Tag 对应最终提交的状态可在仓库 Actions 继续核对。
+- 功能合并提交的 [Pages 38381310726](https://github.com/Callmecx/chainflow-intelligence/actions/runs/38381310726)：**SUCCESS**，`10:10:04 UTC` 完成部署。[GitHub 元数据证据](evidence/v1-1-github-deployment.json)。
+- 实际公开网址：[https://callmecx.github.io/chainflow-intelligence/](https://callmecx.github.io/chainflow-intelligence/)。`10:10:37–10:11:37 UTC` 两套真实浏览器检查 **PASS**，首页/JSON HTTP 200，快照生成 `10:09:28.777Z`，68 池（SOL 41 / BSC 27）、12 来源 OK、BSC logs UNSUPPORTED、provider_errors 为空。完整地址复制、详情 hash 刷新、研究导出、412px 手机布局及来源页通过，无浏览器错误、无本地 API 请求、无私人配置。
+- 证据：[V1.1 面板](evidence/frontend-v11-real-pages/v11-real-browser-smoke.json)、[核心流程与来源明细](evidence/frontend-v11-pages-core/real-browser-smoke.json)、[网络/隐私边界](evidence/frontend-v11-real-pages/public-boundary.json)。公开研究记录为 0，与本机已积累 2 条的数据库相互隔离。
+- 稳定版本：[v1.1.0](https://github.com/Callmecx/chainflow-intelligence/releases/tag/v1.1.0)。Tag 指向最终封版记录提交；该提交仅补文档及证据，未改变 `cf82cfe` 的功能源码。精确发布 SHA 可在 Tag / Release 核对；最终提交的 CI 与新快照部署同时在 Actions 留痕。
+
+**本项目已完成本轮作品封版，停止自动功能开发。** 后续使用现有 [三分钟演示、源码阅读与简历描述](PORTFOLIO_GUIDE.md) 准备 Rust / Web3 求职，不自动开启 V1.2 / V2。
 
 ## 保留的边界
 
