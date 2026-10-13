@@ -55,3 +55,21 @@ Solana RPC 在 `09:45:20.991Z` 返回 WSOL 的 `getAccountInfo`，`slot=45639740
 `/api/research` 当时返回 `total_records=0`、`min_sample_size=30`、`INSUFFICIENT_SAMPLE`；该池研究记录也为 0。1h/2h/6h 的所有窗口计数为 0，而不是已经完成且收益为 0。正式信号产生后才开始前瞻记录，旧版事件不回填。
 
 本案例证明真实接口、持续样本与诚实状态展示。它不替代最终 Canary 报告、不证明 Telegram 已真实投递，也不证明 6h/24h 运行通过。JSON 未包含私人自选列表、批量请求中的其他代币、PID、数据库路径或凭据。
+
+## Canary 末新增自然确认
+
+随后只读查询 `/api/research`，自然正式研究记录已经从 0 增至 **2**，整体仍为 `INSUFFICIENT_SAMPLE`（最低样本量 30）。这不是更改前文结果：前文及 WSOL JSON 是 09:46 UTC 的历史时点，新增记录发生在之后。精确捕获时间、API 返回与窗口状态见 [自然信号白名单证据](evidence/v1-1-natural-signals.json)。
+
+两条记录属于**同一 Solana 代币、同一池的两个规则事件**，不是两个独立代币案例：
+
+- chain：`solana`
+- 完整 token：`2v52Jo1yC5MVaJxa6ZzESEvcdbs6yUhjgNefXLmvpump`
+- 完整 pool：`EtY35iYEu9YRMbiw6mCrFt4PrEnvAdBqtcTLW8GAqmED`
+- 来源：`dexscreener`；规则版本均为 `sampled-v1.1.0-e9f1b342308e3a3`；[公开单池链接](https://dexscreener.com/solana/EtY35iYEu9YRMbiw6mCrFt4PrEnvAdBqtcTLW8GAqmED)。
+
+| 规则 | 正式触发时间 UTC | 证据源时间 UTC | 触发基准价 USD | 基准流动性 USD |
+| --- | --- | --- | ---: | ---: |
+| `STATE_CONFIRMED` | 2026-10-13 09:54:03.235 | 2026-10-13 09:53:29.279 | 0.00006618 | 21,169.30 |
+| `MULTI_PERIOD_5M_15M` | 2026-10-13 09:59:53.704 | 2026-10-13 09:59:30.532 | 0.00007473 | 22,109.61 |
+
+捕获时两条记录的 **1h / 2h / 6h 全部为 `PENDING`**，收益、最大有利/不利变化、最大回撤与流动性变化全部为 `null`。第一条的目标时间为 UTC 10:54:03、11:54:03、15:54:03；第二条为 10:59:53、11:59:53、15:59:53，各有 180 秒容差，目标时间及容差到达后才评估。没有将后续涨价当成已完成收益，也没有构造未来结果。这次补记仅读取 API、保存白名单证据，没有修改阈值、注入样本或重启服务。

@@ -50,7 +50,7 @@
 | Rust CPU | 按全机 16 逻辑核归一的观测区间均值 **1.1037%**、峰值 **1.6578%** |
 | 最终历史覆盖 | 新鲜池 323、陈旧池 917；218 个历史有缺口，最大历史间隔约 3603.612 秒 |
 
-Canary 完成时研究记录已自然增至 **2**，仍为 `INSUFFICIENT_SAMPLE`，未到期的 1h/2h/6h 不能当作已完成结果。之前记录数为 0 的真实案例和页面截图保留原采集时间，不回改旧证据。
+Canary 完成时研究记录已自然增至 **2**，仍为 `INSUFFICIENT_SAMPLE`，未到期的 1h/2h/6h 不能当作已完成结果。[两条自然确认记录](evidence/v1-1-natural-signals.json) 属于同一个 SOL 池的不同规则，不是两个独立代币成功案例。之前记录数为 0 的真实案例和页面截图保留原采集时间，不回改旧证据。
 
 这一负载与时长不是 QPS 基准、长期内存上界或 SLA。最后一次观察在顺序读取多个 API 时恰逢新扫描提交，个别来源成功时间比观察起始晚 0.429 秒，因此报告的 age 为 -0.429；原始证据保留该取样边界，不表示已验证未来数据。请求错误在同轮/后续请求恢复，观测级 `provider_recoveries=0`，没有把未捕获的状态转换虚构为恢复次数。
 
@@ -58,7 +58,7 @@ Canary 完成时研究记录已自然增至 **2**，仍为 `INSUFFICIENT_SAMPLE`
 
 ## 发布验收
 
-- PR / CI：PENDING。
+- [PR #1](https://github.com/Callmecx/chainflow-intelligence/pull/1) 已创建；最终 CI：PENDING。
 - Pages V1.1 最终构建及真实浏览器：PENDING；V1 线上仍是独立历史版本，不能用旧版 HTTP 200 代替新版验收。
 - 稳定 Tag：PENDING；上述核心门槛通过后发布 `v1.1.0` 并标记 PORTFOLIO_READY。
 
