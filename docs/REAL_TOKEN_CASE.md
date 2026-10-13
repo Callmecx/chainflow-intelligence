@@ -60,6 +60,8 @@ Solana RPC 在 `09:45:20.991Z` 返回 WSOL 的 `getAccountInfo`，`slot=45639740
 
 随后只读查询 `/api/research`，自然正式研究记录已经从 0 增至 **2**，整体仍为 `INSUFFICIENT_SAMPLE`（最低样本量 30）。这不是更改前文结果：前文及 WSOL JSON 是 09:46 UTC 的历史时点，新增记录发生在之后。精确捕获时间、API 返回与窗口状态见 [自然信号白名单证据](evidence/v1-1-natural-signals.json)。
 
+本次 API 捕获时间为 **10:03:54.392 UTC**，当时总数确为 2。按 [Canary 报告](evidence/v1-1-canary/soak-20261013T094648Z-a1be38.json) 的实际观测区间 **09:46:49.415—10:01:54.116 UTC** 逐条比较 `trigger_at`，下面两条均发生在该区间内，区间结束后至本次捕获的新增正式研究记录为 0。API 捕获发生在 Canary 结束之后；今后继续产生的记录不计入这份固定时点证据。
+
 两条记录属于**同一 Solana 代币、同一池的两个规则事件**，不是两个独立代币案例：
 
 - chain：`solana`

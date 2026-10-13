@@ -150,5 +150,14 @@
   },
   "public_reference": "https://dexscreener.com/solana/EtY35iYEu9YRMbiw6mCrFt4PrEnvAdBqtcTLW8GAqmED",
   "privacy_note": "仅指定自然确认事件的公开链/代币/池和研究白名单字段；不复制原始evidence_snapshot或批量source_url，不包含私人列表、配置、PID、目录或凭据。",
-  "interpretation": "两个记录属于同一代币同一池的不同规则/时间，不能当作两个独立成功案例。采集时1h/2h/6h均尚未到期；没有收益结果或盈利结论。前面WSOL案例记录为0是更早时点的真实证据，保持不变。"
+  "interpretation": "两个记录属于同一代币同一池的不同规则/时间，不能当作两个独立成功案例。采集时1h/2h/6h均尚未到期；没有收益结果或盈利结论。前面WSOL案例记录为0是更早时点的真实证据，保持不变。",
+  "canary_observation_comparison": {
+    "reference": "docs/evidence/v1-1-canary/soak-20261013T094648Z-a1be38.json",
+    "first_observation_utc": "2026-10-13T09:46:49.4153217Z",
+    "last_observation_utc": "2026-10-13T10:01:54.1168489Z",
+    "selected_records_within_observed_interval": 2,
+    "selected_records_after_observed_interval": 0,
+    "canary_confirmation_delta": 2,
+    "note": "按trigger_at比较Canary实际观测首尾；API捕获时间在Canary结束之后。后续新增记录不属于本次冻结证据。"
+  }
 }
