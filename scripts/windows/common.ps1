@@ -36,7 +36,7 @@ function Import-ProjectEnvironment {
         if ($text -notmatch '^([A-Z][A-Z0-9_]*)=(.*)$') { throw '.env must contain KEY=VALUE lines.' }
         $key = $Matches[1]
         $value = $Matches[2].Trim()
-        if ($key -notin @('RUST_LOG', 'CHAINFLOW_RULES_JSON')) {
+        if ($key -notin @('RUST_LOG', 'CHAINFLOW_RULES_JSON', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'TELEGRAM_ENABLED')) {
             throw "Unsupported .env key: $key. See .env.example."
         }
         if ($value.Length -ge 2 -and (($value.StartsWith('"') -and $value.EndsWith('"')) -or ($value.StartsWith("'") -and $value.EndsWith("'")))) {
@@ -47,7 +47,7 @@ function Import-ProjectEnvironment {
 }
 
 function Initialize-MsvcEnvironment {
-    if (Get-Command link.exe -ErrorAction SilentlyContinue) { return }
+    if ((Get-Command link.exe -ErrorAction SilentlyContinue) -and (Get-Command cl.exe -ErrorAction SilentlyContinue)) { return }
     $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
     if (-not (Test-Path -LiteralPath $vswhere)) { return }
     $install = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
@@ -76,6 +76,10 @@ function Get-ProcessIdentity([int]$ProcessId, [string]$Marker) {
 }
 
 function Test-ProcessIdentity($Identity) {
+    try {
+    if ($null -eq $Identity -or [string]::IsNullOrWhiteSpace([string]$Identity.marker)) { return $false }
+    $markerPath = [IO.Path]::GetFullPath([string]$Identity.marker)
+    if (-not [IO.Path]::IsPathRooted([string]$Identity.marker) -or -not $markerPath.StartsWith(($script:ProjectRoot.TrimEnd('\') + '\'), [StringComparison]::OrdinalIgnoreCase)) { return $false }
     $actual = Get-ProcessIdentity -ProcessId ([int]$Identity.pid) -Marker ([string]$Identity.marker)
     if (-not $actual) { return $false }
     $cim = Get-CimInstance Win32_Process -Filter "ProcessId = $($Identity.pid)" -ErrorAction SilentlyContinue
@@ -85,6 +89,7 @@ function Test-ProcessIdentity($Identity) {
     return ($actual.executable -eq $Identity.executable -and
         $actualTicks -eq $expectedTicks -and
         $cim.CommandLine.IndexOf([string]$Identity.marker, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+    } catch { return $false }
 }
 
 function Write-RuntimeState($State) {

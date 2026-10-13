@@ -41,3 +41,19 @@ describe('snapshot mode integrity', () => {
     await expect(loadSnapshot()).rejects.toThrow('DEMO_FIXTURE 不能作为真实数据')
   })
 })
+
+describe('local health isolation',()=>{
+  it('never calls local health from public snapshot mode',async()=>{
+    const fetchMock=vi.fn()
+    vi.stubGlobal('fetch',fetchMock)
+    const {loadLocalHealth}=await import('./api')
+    await expect(loadLocalHealth()).rejects.toThrow('公开快照不访问')
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+  it('rejects mismatched health mode even on the local endpoint',async()=>{
+    vi.stubEnv('VITE_MODE','LOCAL_LIVE')
+    vi.stubGlobal('fetch',vi.fn().mockResolvedValue(new Response(JSON.stringify({mode:'PUBLIC_SNAPSHOT'}))))
+    const {loadLocalHealth}=await import('./api')
+    await expect(loadLocalHealth()).rejects.toThrow('本地健康接口模式不匹配')
+  })
+})
